@@ -22,7 +22,10 @@ func GetProducts(c *fiber.Ctx) error {
 	if err != nil {
 		return c.
 			Status(500).
-			SendString("Erro ao conectar com o banco de dados")
+			JSON(fiber.Map{
+				"message": "Erro ao conectar com o banco de dados",
+				"error":   err.Error(),
+			})
 	}
 
 	defer conn.Close()
@@ -38,7 +41,10 @@ func GetProducts(c *fiber.Ctx) error {
 		fmt.Println(err)
 		return c.
 			Status(500).
-			SendString("Não foi possível buscar produtos")
+			JSON(fiber.Map{
+				"message": "Não foi possível buscar produtos",
+				"error":   err.Error(),
+			})
 	}
 
 	var products []models.Product = []models.Product{}
