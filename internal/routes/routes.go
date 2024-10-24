@@ -12,5 +12,5 @@ func InitializeRoutes() error {
 	router.Get("/produtos", controllers.GetProducts)
 	router.Get("/clientes", controllers.GetCustomers)
 
-	return router.Listen(":3000")
+	return router.Listen(":8080")
 }
