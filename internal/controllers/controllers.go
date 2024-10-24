@@ -77,7 +77,10 @@ func GetCustomers(c *fiber.Ctx) error {
 	if err != nil {
 		return c.
 			Status(500).
-			SendString("Erro ao conectar com o banco de dados")
+			JSON(fiber.Map{
+				"message": "Erro ao conectar com o banco de dados",
+				"error":   err.Error(),
+			})
 	}
 
 	defer conn.Close()
@@ -93,7 +96,10 @@ func GetCustomers(c *fiber.Ctx) error {
 		fmt.Println(err)
 		return c.
 			Status(500).
-			SendString("Não foi possível buscar clientes")
+			JSON(fiber.Map{
+				"message": "Não foi possível buscar clientes",
+				"error":   err.Error(),
+			})
 	}
 
 	var customers []models.Customer = []models.Customer{}
