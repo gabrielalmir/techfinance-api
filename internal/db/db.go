@@ -29,11 +29,7 @@ func GetDBConnection(c *DatabaseConfig) (*sql.DB, error) {
 }
 
 func OpenDatabaseConnection() (*sql.DB, error) {
-	err := godotenv.Load()
-
-	if err != nil {
-		return nil, err
-	}
+	godotenv.Load()
 
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
