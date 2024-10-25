@@ -6,8 +6,17 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func ConfigureEnvironment() {
+var ServerSettings *ServerConfig
+
+func LoadEnvironmentConfiguration() {
 	godotenv.Load()
+	ServerSettings = newConfig()
+}
+
+type ServerConfig struct {
+	Port          string
+	Authorization string
+	DB            *DatabaseConfig
 }
 
 type DatabaseConfig struct {
@@ -18,7 +27,20 @@ type DatabaseConfig struct {
 	DBName   string
 }
 
-func OpenDatabaseConnection() *DatabaseConfig {
+func newConfig() *ServerConfig {
+	port := os.Getenv("PORT")
+	authorization := os.Getenv("AUTHORIZATION")
+
+	config := &ServerConfig{
+		Port:          port,
+		Authorization: authorization,
+		DB:            newDatabaseConfig(),
+	}
+
+	return config
+}
+
+func newDatabaseConfig() *DatabaseConfig {
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")

@@ -18,8 +18,7 @@ func GetProducts(c *fiber.Ctx) error {
 	page := int(math.Max(float64(c.QueryInt("pagina", 1)-1), 0))
 	offset := page * limit
 
-	dbConn := config.OpenDatabaseConnection()
-	conn, err := db.GetDBConnection(dbConn)
+	conn, err := db.GetDBConnection(config.ServerSettings.DB)
 
 	if err != nil {
 		return c.
@@ -74,8 +73,7 @@ func GetCustomers(c *fiber.Ctx) error {
 	page := int(math.Max(float64(c.QueryInt("pagina", 1)-1), 0))
 	offset := page * limit
 
-	dbConn := config.OpenDatabaseConnection()
-	conn, err := db.GetDBConnection(dbConn)
+	conn, err := db.GetDBConnection(config.ServerSettings.DB)
 
 	if err != nil {
 		return c.
