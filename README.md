@@ -1,7 +1,7 @@
 
 # TechFinance
 
-TechFinance é uma solução mobile para para prover informações para apoio para tomada de decisões. Esta é uma API backend construída utilizando o framework **Fiber** (na linguagem Go).
+TechFinance é uma solução mobile para prover informações para apoio na tomada de decisões. Esta é uma API backend construída utilizando o framework **Elysia** (na linguagem TypeScript) e executada com **Bun.js**.
 
 ## Funcionalidades
 
@@ -12,8 +12,8 @@ TechFinance é uma solução mobile para para prover informações para apoio pa
 
 ## Dependências
 
-- [Fiber](https://gofiber.io/)
-- [Go](https://golang.org/)
+- [Elysia](https://elysia.js.org/)
+- [TypeScript](https://www.typescriptlang.org/)
 - [Manipulação de Conexão com Banco de Dados (pacotes config e db)](./internal/db)
 - Modelos Customizados (`internal/models`)
 
@@ -57,19 +57,6 @@ Exemplo de uso:
 GET /customers?nome=joao&grupo=varejo&limite=10&pagina=2
 ```
 
-## Tratamento de Erros
-
-Em caso de erros (como falhas na conexão com o banco de dados), a API retornará:
-
-- Status: `500 Internal Server Error`
-- Resposta JSON:
-  ```json
-  {
-    "message": "Mensagem de erro",
-    "error": "Descrição detalhada do erro"
-  }
-  ```
-
 ## Consultas ao Banco de Dados
 
 Produtos e clientes são recuperados do banco de dados utilizando consultas SQL dinâmicas:
@@ -81,10 +68,11 @@ As consultas incluem filtros de busca usando operadores `LIKE` e suporte à pagi
 
 ## Como Executar
 
-1. Instale Go e Fiber.
+1. Instale Bun.js e Elysia.
 2. Configure o banco de dados e a conexão no pacote `config`.
 3. Execute a aplicação:
 
 ```bash
-go run main.go
+bun run main.ts
 ```
+

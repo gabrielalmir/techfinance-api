@@ -1,8 +1,0 @@
-### Obter produtos por descrição
-GET https://techfinance.fly.dev/produtos?descricao=COPO&pagina=1&limite=10
-
-### Obter grupo de produtos
-GET https://techfinance.fly.dev/produtos?grupo=CANECAS&pagina=1&limite=10
-
-### Obter clientes por nome
-GET https://techfinance.fly.dev/clientes?nome=JOAO&pagina=1&limite=10
