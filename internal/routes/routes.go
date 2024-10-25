@@ -5,12 +5,16 @@ import (
 	"techfinance/internal/config"
 	"techfinance/internal/controllers"
 
+	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 )
 
 func InitializeRoutes() error {
 	config.LoadEnvironmentConfiguration()
-	router := fiber.New()
+	router := fiber.New(fiber.Config{
+		JSONEncoder: json.Marshal,
+		JSONDecoder: json.Unmarshal,
+	})
 
 	router.Use(func(c *fiber.Ctx) error {
 		auth := c.Get("Authorization")
@@ -24,5 +28,5 @@ func InitializeRoutes() error {
 	router.Get("/produtos", controllers.GetProducts)
 	router.Get("/clientes", controllers.GetCustomers)
 
-	return router.Listen(":8080")
+	return router.Listen(":" + config.ServerSettings.Port)
 }

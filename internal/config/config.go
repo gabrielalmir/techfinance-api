@@ -31,6 +31,10 @@ func newConfig() *ServerConfig {
 	port := os.Getenv("PORT")
 	authorization := os.Getenv("AUTHORIZATION")
 
+	if port == "" {
+		port = "8080"
+	}
+
 	config := &ServerConfig{
 		Port:          port,
 		Authorization: authorization,
