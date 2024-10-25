@@ -1,7 +1,7 @@
 
 # TechFinance
 
-Esta é uma API backend construída utilizando o framework **Fiber** (na linguagem Go), que interage com um banco de dados para recuperar informações sobre produtos e clientes.
+TechFinance é uma solução mobile para para prover informações para apoio para tomada de decisões. Esta é uma API backend construída utilizando o framework **Fiber** (na linguagem Go).
 
 ## Funcionalidades
 
