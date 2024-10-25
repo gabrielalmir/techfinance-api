@@ -7,7 +7,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "https://techfinance.fly.dev",
+    "host": "techfinance.fly.dev",
     "basePath": "/",
     "paths": {
         "/clientes": {

@@ -28,7 +28,7 @@ definitions:
       id_grupo:
         type: string
     type: object
-host: https://techfinance.fly.dev
+host: techfinance.fly.dev
 info:
   contact: {}
   description: TechFinance é uma solução mobile para para prover informações para
