@@ -12,7 +12,7 @@ import (
 // @termsOfService http://swagger.io/terms/
 // @host techfinance.fly.dev
 // @BasePath /
-// @schemes http https
+// @schemes https
 // @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization

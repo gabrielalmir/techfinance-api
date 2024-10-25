@@ -111,7 +111,6 @@ paths:
       tags:
       - produtos
 schemes:
-- http
 - https
 securityDefinitions:
   BearerAuth:
