@@ -1,3 +1,5 @@
+ARG PORT 8080
+
 # use the official Bun image
 # see all versions at https://hub.docker.com/r/oven/bun/tags
 FROM oven/bun:1 AS base
@@ -34,5 +36,5 @@ COPY --from=prerelease /usr/src/app/package.json .
 
 # run the app
 USER bun
-EXPOSE 3000/tcp
+EXPOSE ${PORT}/tcp
 ENTRYPOINT [ "bun", "run", "src/main.ts" ]
