@@ -1,10 +1,12 @@
-export const swaggerConfig = {
+import type { ElysiaSwaggerConfig } from "@elysiajs/swagger";
+
+export const swaggerConfig: ElysiaSwaggerConfig<'/docs'> = {
     path: '/docs',
     documentation: {
         info: {
             title: 'TechFinance API',
             version: '1.0',
-            description: 'TechFinance é uma solução mobile para para prover informações para apoio para tomada de decisões. Esta é uma API backend construída utilizando o framework **Fiber** (na linguagem Go).',
+            description: 'TechFinance é uma solução mobile para para prover informações para apoio para tomada de decisões.',
         },
         servers: [
             {
