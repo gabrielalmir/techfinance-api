@@ -5,7 +5,7 @@ import (
 	"math"
 	"techfinance/internal/config"
 	"techfinance/internal/db"
-	"techfinance/internal/models"
+	"techfinance/internal/repositories"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -31,12 +31,7 @@ func GetProducts(c *fiber.Ctx) error {
 
 	defer conn.Close()
 
-	query := fmt.Sprintf(
-		"SELECT * FROM fatec_produtos WHERE descricao_produto LIKE '%%%s%%' AND descricao_grupo LIKE '%%%s%%' LIMIT %d OFFSET %d",
-		description, group, limit, offset,
-	)
-
-	rows, err := conn.Query(query)
+	products, err := repositories.GetProducts(conn, description, group, limit, offset)
 
 	if err != nil {
 		fmt.Println(err)
@@ -46,20 +41,6 @@ func GetProducts(c *fiber.Ctx) error {
 				"message": "Não foi possível buscar produtos",
 				"error":   err.Error(),
 			})
-	}
-
-	var products []models.Product = []models.Product{}
-
-	for rows.Next() {
-		var product models.Product
-
-		err = rows.Scan(&product.ID, &product.Description, &product.GroupID, &product.Group)
-
-		if err != nil {
-			panic(err)
-		}
-
-		products = append(products, product)
 	}
 
 	return c.JSON(products)
@@ -86,12 +67,7 @@ func GetCustomers(c *fiber.Ctx) error {
 
 	defer conn.Close()
 
-	query := fmt.Sprintf(
-		"SELECT * FROM fatec_clientes WHERE razao_cliente LIKE '%%%s%%' AND descricao_grupo LIKE '%%%s%%' LIMIT %d OFFSET %d",
-		name, group, limit, offset,
-	)
-
-	rows, err := conn.Query(query)
+	customers, err := repositories.GetCustomers(conn, name, group, limit, offset)
 
 	if err != nil {
 		fmt.Println(err)
@@ -101,20 +77,6 @@ func GetCustomers(c *fiber.Ctx) error {
 				"message": "Não foi possível buscar clientes",
 				"error":   err.Error(),
 			})
-	}
-
-	var customers []models.Customer = []models.Customer{}
-
-	for rows.Next() {
-		var customer models.Customer
-
-		err = rows.Scan(&customer.ID, &customer.Name, &customer.FantasyName, &customer.City, &customer.State, &customer.GroupID, &customer.Group)
-
-		if err != nil {
-			panic(err)
-		}
-
-		customers = append(customers, customer)
 	}
 
 	return c.JSON(customers)
