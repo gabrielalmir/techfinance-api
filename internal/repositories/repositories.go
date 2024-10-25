@@ -2,31 +2,31 @@ package repositories
 
 import (
 	"database/sql"
-	"fmt"
 	"techfinance/internal/models"
 )
 
 func GetCustomers(conn *sql.DB, name, group string, limit, offset int) ([]models.Customer, error) {
-	query := fmt.Sprintf(
-		"SELECT * FROM fatec_clientes WHERE razao_cliente LIKE '%%%s%%' AND descricao_grupo LIKE '%%%s%%' LIMIT %d OFFSET %d",
-		name, group, limit, offset,
-	)
+	query := `
+		SELECT *
+		FROM fatec_clientes
+		WHERE LOWER(razao_cliente) LIKE LOWER($1) AND LOWER(descricao_grupo) LIKE LOWER($2)
+		LIMIT $3 OFFSET $4
+	`
 
-	rows, err := conn.Query(query)
+	rows, err := conn.Query(query, "%"+name+"%", "%"+group+"%", limit, offset)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var customers []models.Customer = []models.Customer{}
+	var customers []models.Customer
 
 	for rows.Next() {
 		var customer models.Customer
 
 		err = rows.Scan(&customer.ID, &customer.Name, &customer.FantasyName, &customer.City, &customer.State, &customer.GroupID, &customer.Group)
-
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 
 		customers = append(customers, customer)
@@ -36,18 +36,19 @@ func GetCustomers(conn *sql.DB, name, group string, limit, offset int) ([]models
 }
 
 func GetProducts(conn *sql.DB, description, group string, limit, offset int) ([]models.Product, error) {
-	query := fmt.Sprintf(
-		"SELECT * FROM fatec_produtos WHERE descricao_produto LIKE '%%%s%%' AND descricao_grupo LIKE '%%%s%%' LIMIT %d OFFSET %d",
-		description, group, limit, offset,
-	)
+	query := `
+        SELECT * FROM fatec_produtos
+        WHERE LOWER(descricao_produto) LIKE LOWER($1) AND LOWER(descricao_grupo) LIKE LOWER($2)
+        LIMIT $3 OFFSET $4
+    `
 
-	rows, err := conn.Query(query)
+	rows, err := conn.Query(query, "%"+description+"%", "%"+group+"%", limit, offset)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var products []models.Product = []models.Product{}
+	var products []models.Product
 
 	for rows.Next() {
 		var product models.Product
@@ -55,7 +56,7 @@ func GetProducts(conn *sql.DB, description, group string, limit, offset int) ([]
 		err = rows.Scan(&product.ID, &product.Description, &product.GroupID, &product.Group)
 
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 
 		products = append(products, product)
