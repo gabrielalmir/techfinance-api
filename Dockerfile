@@ -16,7 +16,7 @@ RUN bun run compile
 FROM debian:bookworm
 
 # Copy the built application from the builder stage
-COPY --from=builder /usr/src/app/dist /usr/local/bin/
+COPY --from=builder /usr/src/app/main /usr/src/app/main
 
 # Set the command to run your app
 CMD ["main"]
