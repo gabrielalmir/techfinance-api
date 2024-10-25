@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"math"
+	"techfinance/internal/config"
 	"techfinance/internal/db"
 	"techfinance/internal/models"
 
@@ -17,7 +18,8 @@ func GetProducts(c *fiber.Ctx) error {
 	page := int(math.Max(float64(c.QueryInt("pagina", 1)-1), 0))
 	offset := page * limit
 
-	conn, err := db.OpenDatabaseConnection()
+	dbConn := config.OpenDatabaseConnection()
+	conn, err := db.GetDBConnection(dbConn)
 
 	if err != nil {
 		return c.
@@ -72,7 +74,8 @@ func GetCustomers(c *fiber.Ctx) error {
 	page := int(math.Max(float64(c.QueryInt("pagina", 1)-1), 0))
 	offset := page * limit
 
-	conn, err := db.OpenDatabaseConnection()
+	dbConn := config.OpenDatabaseConnection()
+	conn, err := db.GetDBConnection(dbConn)
 
 	if err != nil {
 		return c.

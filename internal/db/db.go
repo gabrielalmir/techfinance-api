@@ -3,21 +3,12 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"os"
+	"techfinance/internal/config"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
-type DatabaseConfig struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-	DBName   string
-}
-
-func GetDBConnection(c *DatabaseConfig) (*sql.DB, error) {
+func GetDBConnection(c *config.DatabaseConfig) (*sql.DB, error) {
 	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", c.Host, c.Port, c.User, c.Password, c.DBName)
 	conn, err := sql.Open("postgres", connStr)
 
@@ -26,30 +17,4 @@ func GetDBConnection(c *DatabaseConfig) (*sql.DB, error) {
 	}
 
 	return conn, nil
-}
-
-func OpenDatabaseConnection() (*sql.DB, error) {
-	godotenv.Load()
-
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbUser := os.Getenv("DB_USER")
-	dbPass := os.Getenv("DB_PASS")
-	dbName := os.Getenv("DB_NAME")
-
-	dbConfig := DatabaseConfig{
-		Host:     dbHost,
-		Port:     dbPort,
-		User:     dbUser,
-		Password: dbPass,
-		DBName:   dbName,
-	}
-
-	conn, err := GetDBConnection(&dbConfig)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return conn, err
 }
