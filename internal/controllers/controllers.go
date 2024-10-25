@@ -10,6 +10,19 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// GetProducts godoc
+// @Summary Retorna uma lista de produtos
+// @Description Retorna uma lista de produtos
+// @Tags produtos
+// @Accept json
+// @Produce json
+// @Param descricao query string false "Descrição do produto"
+// @Param grupo query string false "Grupo do produto"
+// @Param limite query int false "Limite de registros por página"
+// @Param pagina query int false "Número da página"
+// @Success 200 {array} models.Product
+// @Router /produtos [get]
+// @Security BearerAuth
 func GetProducts(c *fiber.Ctx) error {
 	description := c.Query("descricao")
 	group := c.Query("grupo")
@@ -46,6 +59,19 @@ func GetProducts(c *fiber.Ctx) error {
 	return c.JSON(products)
 }
 
+// GetCustomers
+// @Summary Retorna uma lista de clientes
+// @Description Retorna uma lista de clientes
+// @Tags clientes
+// @Accept json
+// @Produce json
+// @Param nome query string false "Nome do cliente"
+// @Param grupo query string false "Grupo do cliente"
+// @Param limite query int false "Limite de registros por página"
+// @Param pagina query int false "Número da página"
+// @Success 200 {array} models.Customer
+// @Router /clientes [get]
+// @Security BearerAuth
 func GetCustomers(c *fiber.Ctx) error {
 	name := c.Query("nome")
 	group := c.Query("grupo")

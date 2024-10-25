@@ -1,0 +1,180 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "TechFinance é uma solução mobile para para prover informações para apoio para tomada de decisões. Esta é uma API backend construída utilizando o framework **Fiber** (na linguagem Go).",
+        "title": "TechFinance API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "https://techfinance.fly.dev",
+    "basePath": "/",
+    "paths": {
+        "/clientes": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna uma lista de clientes",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clientes"
+                ],
+                "summary": "Retorna uma lista de clientes",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Nome do cliente",
+                        "name": "nome",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Grupo do cliente",
+                        "name": "grupo",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limite de registros por página",
+                        "name": "limite",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Número da página",
+                        "name": "pagina",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Customer"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/produtos": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retorna uma lista de produtos",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "produtos"
+                ],
+                "summary": "Retorna uma lista de produtos",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Descrição do produto",
+                        "name": "descricao",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Grupo do produto",
+                        "name": "grupo",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limite de registros por página",
+                        "name": "limite",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Número da página",
+                        "name": "pagina",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Product"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Customer": {
+            "type": "object",
+            "properties": {
+                "cidade": {
+                    "type": "string"
+                },
+                "estado": {
+                    "type": "string"
+                },
+                "grupo": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "id_grupo": {
+                    "type": "integer"
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "nome_fantasia": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Product": {
+            "type": "object",
+            "properties": {
+                "descricao": {
+                    "type": "string"
+                },
+                "grupo": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "id_grupo": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
