@@ -3,14 +3,11 @@ FROM oven/bun:latest as builder
 
 WORKDIR /usr/src/app
 
-# Copy package files
-COPY bun.lockb bun.yaml ./
+# Copy the rest of the application files
+COPY . .
 
 # Install dependencies
 RUN bun install
-
-# Copy the rest of the application files
-COPY . .
 
 # Build the application (compile to native ./main)
 RUN bun run compile
