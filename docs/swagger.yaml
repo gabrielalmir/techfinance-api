@@ -110,6 +110,9 @@ paths:
       summary: Retorna uma lista de produtos
       tags:
       - produtos
+schemes:
+- http
+- https
 securityDefinitions:
   BearerAuth:
     in: header

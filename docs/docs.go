@@ -190,7 +190,7 @@ var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "techfinance.fly.dev",
 	BasePath:         "/",
-	Schemes:          []string{},
+	Schemes:          []string{"http", "https"},
 	Title:            "TechFinance API",
 	Description:      "TechFinance é uma solução mobile para para prover informações para apoio para tomada de decisões. Esta é uma API backend construída utilizando o framework **Fiber** (na linguagem Go).",
 	InfoInstanceName: "swagger",
