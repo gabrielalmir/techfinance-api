@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"fmt"
-	"math"
 	"techfinance/internal/config"
 	"techfinance/internal/db"
 	"techfinance/internal/repositories"
+	"techfinance/internal/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -15,7 +15,7 @@ func GetProducts(c *fiber.Ctx) error {
 	group := c.Query("grupo")
 
 	limit := c.QueryInt("limite", 10)
-	page := int(math.Max(float64(c.QueryInt("pagina", 1)-1), 0))
+	page := utils.MaxInt(c.QueryInt("pagina", 1)-1, 0)
 	offset := page * limit
 
 	conn, err := db.GetDBConnection(config.ServerSettings.DB)
@@ -51,7 +51,7 @@ func GetCustomers(c *fiber.Ctx) error {
 	group := c.Query("grupo")
 
 	limit := c.QueryInt("limite", 10)
-	page := int(math.Max(float64(c.QueryInt("pagina", 1)-1), 0))
+	page := utils.MaxInt(c.QueryInt("pagina", 1)-1, 0)
 	offset := page * limit
 
 	conn, err := db.GetDBConnection(config.ServerSettings.DB)
