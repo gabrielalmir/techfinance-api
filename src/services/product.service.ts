@@ -10,8 +10,8 @@ const productQuerySchema = z.object({
     pagina: z.coerce.number().optional(),
 });
 
-export const productService = {
-    getProducts: async (query: Record<string, string | undefined>) => {
+export class ProductService {
+    async getProducts(query: Record<string, string | undefined>) {
         const { descricao = '', grupo = '', limite = 10, pagina = 1 } = productQuerySchema.parse(query);
         const offset = (pagina - 1) * limite;
 
@@ -23,5 +23,6 @@ export const productService = {
             .execute();
 
         return products;
-    },
-};
+    }
+}
+

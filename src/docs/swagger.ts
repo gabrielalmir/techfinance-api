@@ -16,5 +16,19 @@ export const swaggerConfig: ElysiaSwaggerConfig<'/docs'> = {
                 url: 'http://localhost:8080',
             }
         ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'Bearer'
+                }
+            }
+        },
+        security: [
+            {
+                bearerAuth: []
+            }
+        ]
     },
 }
