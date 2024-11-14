@@ -3,6 +3,7 @@ import { z } from "zod";
 
 const envSchema = z.object({
     DATABASE_URL: z.string(),
+    GEMINI_KEY: z.string(),
     AUTHORIZATION: z.string(),
     PORT: z.coerce.number().default(8080),
 })

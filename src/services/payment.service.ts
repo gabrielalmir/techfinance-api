@@ -1,7 +1,46 @@
 import { sql } from "drizzle-orm";
 import { db } from "../db";
+import { GoogleGenerativeAI, type GenerativeModel } from "@google/generative-ai";
+import { env } from "../config/env";
+
+export enum WhoEnum {
+    me = 'me',
+    bot = 'bot',
+}
+
+export interface MessageModel {
+    message: string;
+    who: WhoEnum;
+}
 
 export class PaymentService {
+    private model: GenerativeModel;
+    public messages: MessageModel[] = [];
+
+    constructor() {
+        const genAI = new GoogleGenerativeAI(env.GEMINI_KEY);
+        this.model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    }
+
+    async summaryAI(query: Record<string, string | undefined>): Promise<any> {
+        const result = await db.execute(sql`
+            select documento, titulo, parcela, nome_fantasia, valor_saldo, data_vencimento 
+            from fatec_contas_receber where data_vencimento < '2024-03-31'
+        `)
+
+        const { prompt: message } = query;
+        
+        const resultJson = JSON.stringify(result)
+        const prompt = `${message}:\n\nEscreva sempre em Português do Brasil e considere a data de hoje como ${new Date().toISOString()}. Formate datas e moedas no padrão brasileiro\n\n${resultJson}`;
+
+        const chat = this.model.startChat();
+        const chatResult = await chat.sendMessage(prompt);
+        const response = chatResult.response;
+        const text = response.text();
+
+        return text;
+    }
+
     async summary() {
         const result = await db.execute(sql`
             WITH CONTAS AS (

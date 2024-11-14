@@ -30,4 +30,9 @@ routes.get('/resumo_contas_receber', () => {
     return paymentService.summary();
 })
 
+routes.get('/contas_receber_ai', ({ query }) =>{
+    const paymentService = new PaymentService();
+    return paymentService.summaryAI(query);
+})
+
 export default routes;
