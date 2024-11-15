@@ -1,0 +1,31 @@
+{
+  "name": "techfinance-api",
+  "module": "src/main.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/main.ts",
+    "build": "bun build src/main.ts --target bun --outdir ./dist",
+    "compile": "bun build src/main.ts --compile",
+    "start": "NODE_ENV=production bun dist/main.js",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/pg": "^8.11.10",
+    "drizzle-kit": "^0.26.2",
+    "tsx": "^4.19.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@elysiajs/bearer": "^1.1.2",
+    "@elysiajs/cors": "^1.1.1",
+    "@elysiajs/swagger": "^1.1.5",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.35.3",
+    "elysia": "^1.1.23",
+    "pg": "^8.13.1",
+    "zod": "^3.23.8"
+  }
+}
