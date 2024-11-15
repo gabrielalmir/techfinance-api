@@ -30,4 +30,9 @@ routes.get('/resumo_contas_receber', () => {
     return paymentService.summary();
 })
 
+routes.get('/vendas', ({ query }) => {
+    const salesService = new SalesService();
+    return salesService.getSales(query);
+});
+
 export default routes;
