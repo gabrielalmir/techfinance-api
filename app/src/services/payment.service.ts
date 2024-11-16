@@ -1,7 +1,30 @@
 import { sql } from "drizzle-orm";
 import { db } from "../db";
+import { GeminiService } from "./gemini.service";
 
 export class PaymentService {
+    private geminiService: GeminiService;
+
+    constructor() {
+        this.geminiService = new GeminiService();
+    }
+
+    async summaryAI(query: Record<string, string | undefined>): Promise<any> {
+        const result = await db.execute(sql`
+            SELECT documento, titulo, parcela, nome_fantasia, valor_saldo, data_vencimento
+            FROM fatec_contas_receber
+            WHERE data_vencimento < '2024-03-31'
+        `);
+
+        const { prompt: message } = query;
+        const resultJson = JSON.stringify(result);
+
+        const prompt = `${message}:\n\nEscreva sempre em Português do Brasil e considere a data de hoje como ${new Date().toISOString()}. Formate datas e moedas no padrão brasileiro\n\n${resultJson}`;
+        const response = await this.geminiService.generateResponse(prompt);
+
+        return response;
+    }
+
     async summary() {
         const result = await db.execute(sql`
             WITH CONTAS AS (
@@ -26,7 +49,7 @@ export class PaymentService {
                 COUNT(CASE WHEN status_vencimento = 'Vencimento superior a 30 dias' THEN 1 END) AS vencimento_superior_30,
                 COUNT(CASE WHEN status_vencimento = 'Vencimento hoje' THEN 1 END) AS vencimento_hoje
             FROM CONTAS;
-        `)
+        `);
 
         return result.rows[0];
     }
