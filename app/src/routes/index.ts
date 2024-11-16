@@ -41,4 +41,25 @@ routes.get('/vendas', ({ query }) => {
     return salesService.getSales(query);
 });
 
+routes.get('/produtos/mais-vendidos', ({ query }) => {
+    const salesService = new SaleService();
+    return salesService.getTopProductsByQuantity(query);
+});
+
+routes.get('/produtos/maior-valor', ({ query }) => {
+    const salesService = new SaleService();
+    return salesService.getTopProductsByValue(query);
+});
+
+routes.get('/produtos/variacao-preco', ({ query }) => {
+    const salesService = new SaleService();
+    return salesService.getPriceVariationByProduct(query);
+});
+
+routes.get('/empresas/participacao', ({ query }) => {
+    const salesService = new SaleService();
+    return salesService.getCompanySalesParticipation(query);
+});
+
+
 export default routes;
