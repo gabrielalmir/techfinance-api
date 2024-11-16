@@ -3,6 +3,7 @@ import { env } from '../config/env';
 import { CustomerService } from '../services/customer.service';
 import { PaymentService } from '../services/payment.service';
 import { ProductService } from '../services/product.service';
+import { SaleService } from '../services/sales.service';
 
 const routes = new Elysia();
 
@@ -25,13 +26,18 @@ routes.get('/clientes', ({ query }) => {
     return customerService.getCustomers(query);
 });
 
-routes.get('/resumo_contas_receber', () => {
+routes.get('/contas_receber/resumo', () => {
     const paymentService = new PaymentService();
     return paymentService.summary();
-})
+});
+
+routes.get('/contas_receber/ai', ({ query }) => {
+    const paymentService = new PaymentService();
+    return paymentService.summaryAI(query);
+});
 
 routes.get('/vendas', ({ query }) => {
-    const salesService = new SalesService();
+    const salesService = new SaleService();
     return salesService.getSales(query);
 });
 
