@@ -60,6 +60,10 @@ export class SaleService {
                 total
                 from
                 OBTER_TOTAL
+            ),
+            (
+                select COUNT(1) as qtde
+                FROM fatec_vendas
             )
             from
             TOP_QUANTITY
