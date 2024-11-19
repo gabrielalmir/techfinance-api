@@ -25,14 +25,45 @@ export class SaleService {
         const { limite = 10 } = saleQuerySchema.parse(query);
 
         const sql = `
-            SELECT
+            with
+            TOP_QUANTITY as (
+                select
                 codigo_produto,
                 descricao_produto,
-                SUM(CAST(REPLACE(REPLACE(qtde, '.', ''), ',', '.') AS NUMERIC)) AS quantidade_total
-            FROM fatec_vendas
-            GROUP BY codigo_produto, descricao_produto
-            ORDER BY quantidade_total DESC
-            LIMIT ${limite}
+                sum(
+                    cast(
+                    replace(replace(qtde, '.', ''), ',', '.') as numeric
+                    )
+                ) as quantidade_total
+                from
+                fatec_vendas
+                group by
+                codigo_produto,
+                descricao_produto
+                order by
+                quantidade_total desc
+            ),
+            OBTER_TOTAL as (
+                select
+                sum(t.quantidade_total) as total
+                from
+                TOP_QUANTITY t
+                order by
+                total desc
+            )
+            select
+            codigo_produto,
+            descricao_produto,
+            quantidade_total,
+            (
+                select
+                total
+                from
+                OBTER_TOTAL
+            )
+            from
+            TOP_QUANTITY
+            LIMIT ${limite};
         `;
 
         const result = await db.execute(sql);
