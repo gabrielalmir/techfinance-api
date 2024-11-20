@@ -61,5 +61,8 @@ routes.get('/empresas/participacao', ({ query }) => {
     return salesService.getCompanySalesParticipation(query);
 });
 
+routes.get('/empresas/participacao-por-valor', ({ query }) => {
+    return salesService.getCompanySalesParticipationByValue(query);
+});
 
 export default routes;

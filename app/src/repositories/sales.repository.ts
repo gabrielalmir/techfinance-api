@@ -125,4 +125,34 @@ export class SalesRepository {
         const result = await db.execute(sql);
         return result.rows;
     }
+
+    async getCompanySalesParticipationByValue(limite: number) {
+        const totalSql = `
+            SELECT
+                SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) AS total_geral
+            FROM fatec_vendas
+        `;
+
+        const totalResult = await db.execute(totalSql);
+
+        if (totalResult.rows.length == 0) {
+            throw new Error("No sales data found.");
+        }
+
+        const totalGeral = totalResult.rows[0]?.total_geral || 1;
+
+        const sql = `
+            SELECT
+                nome_fantasia,
+                SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) AS valor_total,
+                ROUND((SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) / ${totalGeral}) * 100, 2) AS percentual
+            FROM fatec_vendas
+            GROUP BY nome_fantasia
+            ORDER BY valor_total DESC
+            LIMIT ${limite}
+        `;
+
+        const result = await db.execute(sql);
+        return result.rows;
+    }
 }

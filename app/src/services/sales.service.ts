@@ -30,6 +30,11 @@ export class SaleService {
         return this.salesRepository.getCompanySalesParticipation(limite);
     }
 
+    async getCompanySalesParticipationByValue(query: Record<string, string | undefined>) {
+        const { limite = 10 } = saleQuerySchema.parse(query);
+        return this.salesRepository.getCompanySalesParticipationByValue(limite);
+    }
+
     async getPriceVariationByProduct(query: Record<string, string | undefined>) {
         const { limite = 10 } = saleQuerySchema.parse(query);
         return this.salesRepository.getPriceVariationByProduct(limite);
