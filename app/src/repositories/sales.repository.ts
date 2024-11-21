@@ -63,13 +63,32 @@ export class SalesRepository {
 
     async getTopProductsByValue(limite: number) {
         const sql = `
-            SELECT
-                codigo_produto,
+            with TOP_QUANTITY as (
+                select codigo_produto,
+                    descricao_produto,
+                    sum(
+                        cast(
+                            replace(replace(total, '.', ''), ',', '.') as numeric
+                        )
+                    ) as valor_total
+                from fatec_vendas
+                group by codigo_produto,
+                    descricao_produto
+                order by valor_total desc
+            ),
+            OBTER_TOTAL as (
+                select sum(t.valor_total) as total
+                from TOP_QUANTITY t
+                order by total desc
+            )
+            select codigo_produto,
                 descricao_produto,
-                SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) AS valor_total
-            FROM fatec_vendas
-            GROUP BY codigo_produto, descricao_produto
-            ORDER BY valor_total DESC
+                valor_total,
+                (
+                    select total as total_historico
+                    from OBTER_TOTAL
+                )
+            from TOP_QUANTITY
             LIMIT ${limite}
         `;
 
