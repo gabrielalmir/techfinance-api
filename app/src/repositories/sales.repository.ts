@@ -87,6 +87,10 @@ export class SalesRepository {
                 (
                     select total as total_historico
                     from OBTER_TOTAL
+                ),
+                (
+                    select COUNT(1) as qtde
+                    FROM fatec_vendas
                 )
             from TOP_QUANTITY
             LIMIT ${limite}
