@@ -7,7 +7,6 @@ export class PaymentRepository {
             SELECT documento, titulo, parcela, nome_fantasia, valor_saldo, data_vencimento
             FROM fatec_contas_receber
             WHERE data_vencimento < '2024-03-31'
-            ORDER data_vencimento ASC
         `);
     }
 

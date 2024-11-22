@@ -14,7 +14,7 @@ export class PaymentService {
         const { prompt: message } = query;
         const resultJson = JSON.stringify(result);
 
-        const prompt = `${message}:\n\nEscreva sempre em Português do Brasil e considere a data de hoje como ${new Date().toISOString()}. Formate datas e moedas no padrão brasileiro\n\n${resultJson}`;
+        const prompt = `${message}:\n\nEscreva sempre em Português do Brasil e considere a data de hoje como ${new Date().toISOString()}. Formate datas e moedas no padrão brasileiro\n\n${resultJson}. Considere por data de vencimento ordenada da mais antiga para mais nova.`;
         const response = await this.geminiService.generateResponse(prompt);
 
         return response;
