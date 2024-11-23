@@ -1,21 +1,24 @@
 import type { PaymentRepository } from "../repositories/payment.repository";
-import { GeminiService } from "./gemini.service";
+import type { PromptService } from "./prompt/prompt.service";
 
 export class PaymentService {
-    private geminiService: GeminiService;
+    constructor(
+        private readonly paymentRepository: PaymentRepository,
+        private readonly promptService: PromptService
+    ) { }
 
-    constructor(private readonly paymentRepository: PaymentRepository) {
-        this.geminiService = new GeminiService();
-    }
+    async summaryAI(query: Record<string, string | undefined>): Promise<string> {
+        const { prompt } = query;
 
-    async summaryAI(query: Record<string, string | undefined>): Promise<any> {
+        if (!prompt) {
+            throw new Error('Please provide a valid prompt before generating a summary');
+        }
+
         const result = await this.paymentRepository.getSummaryAIData();
+        const serializedPaymentResult = JSON.stringify(result);
 
-        const { prompt: message } = query;
-        const resultJson = JSON.stringify(result);
-
-        const prompt = `${message}:\n\nEscreva sempre em Português do Brasil e considere a data de hoje como ${new Date().toISOString()}. Formate datas e moedas no padrão brasileiro\n\n${resultJson}.`;
-        const response = await this.geminiService.generateResponse(prompt);
+        const promptMessage = `Data de Hoje = ${new Date().toISOString()}\n\n${prompt}:\n\n${serializedPaymentResult}. Até 500 caracteres.\n\n`;
+        const response = await this.promptService.generateResponse(promptMessage);
 
         return response;
     }

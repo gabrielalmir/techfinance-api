@@ -1,7 +1,8 @@
 import { GoogleGenerativeAI, type GenerativeModel } from "@google/generative-ai";
-import { env } from "../config/env";
+import { env } from "../../config/env";
+import type { PromptService } from "./prompt.service";
 
-export class GeminiService {
+export class GeminiService implements PromptService {
     private model: GenerativeModel;
 
     constructor() {

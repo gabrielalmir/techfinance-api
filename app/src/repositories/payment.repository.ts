@@ -6,7 +6,7 @@ export class PaymentRepository {
         return await db.execute(sql`
             SELECT documento, titulo, parcela, nome_fantasia, valor_saldo, data_vencimento
             FROM fatec_contas_receber
-            WHERE data_vencimento < '2024-03-31'
+            WHERE data_vencimento < '2024-04-30'
             ORDER BY data_vencimento ASC
         `);
     }

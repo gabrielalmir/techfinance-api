@@ -12,6 +12,10 @@ const app = new Elysia()
     .use(bearer())
     .use(routes);
 
-app.listen(env.PORT, () => {
-    console.log(`Server running on port ${env.PORT}`);
-});
+console.log(`Server running on port ${env.PORT}`);
+
+Bun.serve({
+    fetch: app.fetch,
+    port: env.PORT,
+    idleTimeout: 255,
+})

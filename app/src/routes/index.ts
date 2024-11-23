@@ -5,12 +5,13 @@ import { SalesRepository } from '../repositories/sales.repository';
 import { CustomerService } from '../services/customer.service';
 import { PaymentService } from '../services/payment.service';
 import { ProductService } from '../services/product.service';
+import { OpenAIService } from '../services/prompt/openai.service';
 import { SaleService } from '../services/sales.service';
 
 const routes = new Elysia();
 
 const paymentRepository = new PaymentRepository();
-const paymentService = new PaymentService(paymentRepository);
+const paymentService = new PaymentService(paymentRepository, new OpenAIService());
 const salesRepository = new SalesRepository();
 const salesService = new SaleService(salesRepository);
 const productService = new ProductService();
