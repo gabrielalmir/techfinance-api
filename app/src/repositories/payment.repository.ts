@@ -13,7 +13,7 @@ export class PaymentRepository {
             TO_CHAR(CAST(data_vencimento as DATE), 'YYYY-MM-DD') AS data_vencimento
             FROM fatec_contas_receber f
             WHERE data_vencimento < '2024-04-30'
-            ORDER BY f.data_vencimento ASC
+            ORDER BY CAST(f.data_vencimento as DATE) ASC
         `);
     }
 
