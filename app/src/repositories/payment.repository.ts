@@ -4,7 +4,13 @@ import { db } from "../db";
 export class PaymentRepository {
     async getSummaryAIData(): Promise<any> {
         return await db.execute(sql`
-            SELECT documento, titulo, parcela, nome_fantasia, valor_saldo, data_vencimento
+            SELECT
+            documento,
+            titulo,
+            parcela,
+            nome_fantasia,
+            valor_saldo,
+            TO_CHAR(data_vencimento, 'DD/MM/YY') AS data_vencimento
             FROM fatec_contas_receber
             WHERE data_vencimento < '2024-04-30'
             ORDER BY data_vencimento ASC
