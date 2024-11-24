@@ -16,7 +16,7 @@ export class PaymentService {
 
         const result = await this.paymentRepository.getSummaryAIData();
         const serializedPaymentResult = JSON.stringify(result);
-        const promptMessage = `Data de Hoje = ${new Date().toLocaleString('pt-br')}\n\n${prompt}:\n\n${serializedPaymentResult}.\n\n`;
+        const promptMessage = `Data de Hoje = ${new Date().toISOString()}\n\n${prompt}:\n\n${serializedPaymentResult}.\n\n`;
         const response = await this.promptService.generateResponse(promptMessage);
 
         return response;
