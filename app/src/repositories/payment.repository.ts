@@ -11,9 +11,9 @@ export class PaymentRepository {
             nome_fantasia,
             valor_saldo,
             TO_CHAR(CAST(data_vencimento as DATE), 'DD/MM/YY') AS data_vencimento
-            FROM fatec_contas_receber
+            FROM fatec_contas_receber f
             WHERE data_vencimento < '2024-04-30'
-            ORDER BY data_vencimento ASC
+            ORDER BY f.data_vencimento ASC
         `);
     }
 
