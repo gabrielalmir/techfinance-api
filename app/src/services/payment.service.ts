@@ -19,7 +19,7 @@ export class PaymentService {
         const promptMessage = `Data de Hoje = ${new Date().toISOString()}\n\n${prompt}:\n\n${serializedPaymentResult}.\n\n`;
         const response = await this.promptService.generateResponse(promptMessage);
 
-        return response;
+        return JSON.parse(response);
     }
 
     async summary() {
