@@ -24,7 +24,7 @@ export class PaymentService {
             day: "2-digit",
             month: "2-digit",
             year: "2-digit",
-        })}\n\n${prompt}:\n\n${serializedPaymentResult}. Até 500 caracteres.\n\n`;
+        })}\n\n${prompt}:\n\n${serializedPaymentResult}. As datas deverão ser padrão DD/MM/YY. Até 500 caracteres.\n\n`;
         const response = await this.promptService.generateResponse(promptMessage);
 
         return response;
