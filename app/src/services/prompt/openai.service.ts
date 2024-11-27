@@ -14,6 +14,7 @@ export class OpenAIService implements PromptService {
             messages: [
                 { "role": "user", "content": prompt }
             ],
+            temperature: 0,
             response_format: {
                 "type": "json_schema",
                 "json_schema": {
