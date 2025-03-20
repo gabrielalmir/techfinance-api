@@ -1,3 +1,4 @@
+
 # TechFinance
 
 TechFinance é uma solução mobile para prover informações para apoio na tomada de decisões. Esta é uma API backend construída utilizando o framework **Elysia** (na linguagem TypeScript) e executada com **Bun.js**.
@@ -13,9 +14,8 @@ TechFinance é uma solução mobile para prover informações para apoio na toma
 
 - [Elysia](https://elysia.js.org/)
 - [TypeScript](https://www.typescriptlang.org/)
-- [Bun.js](https://bun.sh/)
-- [Drizzle ORM](https://orm.drizzle.team/)
-- [Zod](https://zod.dev/)
+- [Manipulação de Conexão com Banco de Dados (pacotes config e db)](./internal/db)
+- Modelos Customizados (`internal/models`)
 
 ## Endpoints
 
@@ -57,14 +57,6 @@ Exemplo de uso:
 GET /customers?nome=joao&grupo=varejo&limite=10&pagina=2
 ```
 
-### Resumo de Contas a Receber
-
-**Endpoint:** `/resumo_contas_receber`
-
-**Método:** `GET`
-
-Recupera um resumo das contas a receber, categorizando-as por status de vencimento.
-
 ## Consultas ao Banco de Dados
 
 Produtos e clientes são recuperados do banco de dados utilizando consultas SQL dinâmicas:
@@ -84,19 +76,3 @@ As consultas incluem filtros de busca usando operadores `LIKE` e suporte à pagi
 bun run main.ts
 ```
 
-## Configuração do Docker
-
-O projeto inclui um arquivo `docker-compose.yml` para facilitar a configuração e execução dos serviços necessários (nginx, postgres e a aplicação).
-
-## Variáveis de Ambiente
-
-As variáveis de ambiente são configuradas no arquivo `.env`:
-
-```
-DATABASE_URL=postgresql://docker:docker@db:6543/docker
-AUTHORIZATION=ronaldo
-```
-
-## Documentação Swagger
-
-A documentação da API pode ser acessada em `/docs` quando a aplicação estiver em execução.
