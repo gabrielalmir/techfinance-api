@@ -10,7 +10,7 @@ export const swaggerConfig: ElysiaSwaggerConfig<'/docs'> = {
         },
         servers: [
             {
-                url: 'https://techfinance.fly.dev',
+                url: 'https://techfinance-api.fly.dev',
             },
             {
                 url: 'http://localhost:3000',
