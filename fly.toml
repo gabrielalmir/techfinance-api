@@ -1,11 +1,12 @@
-app = 'techfinance'
+# fly.toml app configuration file generated for techfinance-api on 2025-03-24T23:41:54Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'techfinance-api'
 primary_region = 'gru'
 
 [build]
-  [build.args]
-
-[env]
-  PORT = '8080'
 
 [http_service]
   internal_port = 8080
@@ -19,3 +20,4 @@ primary_region = 'gru'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+  memory_mb = 1024
