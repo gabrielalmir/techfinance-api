@@ -1,4 +1,3 @@
-import { varchar } from "drizzle-orm/mysql-core";
 import { integer, pgTable, text } from "drizzle-orm/pg-core";
 
 export const produtos = pgTable("fatec_produtos", {
@@ -40,7 +39,7 @@ export const contas_receber = pgTable("fatec_contas_receber", {
 
 export const vendas = pgTable("fatec_vendas", {
     idVenda: integer("id_venda").primaryKey(),
-    dataEmissao: text("data_emissao"), 
+    dataEmissao: text("data_emissao"),
     tipo: integer("tipo"),
     descricaoTipo: text("descricao_tipo"),
     idCliente: integer("id_cliente").notNull(),
@@ -49,12 +48,12 @@ export const vendas = pgTable("fatec_vendas", {
     idGrupoCliente: integer("id_grupo_cliente").notNull(),
     descricaoGrupoCliente: text("descricao_grupo_cliente").notNull(),
     cidade: text("cidade").notNull(),
-    uf: text("uf").notNull(), 
+    uf: text("uf").notNull(),
     codigoProduto: text("codigo_produto").notNull(),
     descricaoProduto: text("descricao_produto").notNull(),
     idGrupoProduto: text("id_grupo_produto").notNull(),
     descricaoGrupoProduto: text("descricao_grupo_produto").notNull(),
     qtde: integer("qtde").notNull(),
-    valorUnitario: text("valor_unitario").notNull(), 
-    total: text("total").notNull(), 
+    valorUnitario: text("valor_unitario").notNull(),
+    total: text("total").notNull(),
 });
