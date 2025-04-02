@@ -1,10 +1,20 @@
 import { Elysia } from 'elysia';
+import { z } from 'zod';
 import { productService, salesService } from '../config/deps';
+
+const productQuerySchema = z.object({
+    nome: z.string().optional(),
+    grupo: z.string().optional(),
+    limite: z.coerce.number().optional(),
+    pagina: z.coerce.number().optional(),
+});
 
 export const productsRoutes = (app: Elysia) => {
     app.get('/produtos', async ({ query }) => {
         try {
-            return await productService.getProducts(query);
+            const { nome, grupo, limite = 10, pagina = 1 } = productQuerySchema.parse(query);
+            const offset = (pagina - 1) * limite;
+            return await productService.getProducts({ name: nome, group: grupo, limit: limite, offset });
         } catch (error) {
             return { status: 500, message: 'Erro ao obter produtos' };
         }
