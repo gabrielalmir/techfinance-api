@@ -3,7 +3,7 @@ import { env } from "../../config/env";
 import type { PromptService } from "./prompt.service";
 
 export class GeminiService implements PromptService {
-    private model: GenerativeModel;
+    private readonly model: GenerativeModel;
 
     constructor() {
         if (!env.GEMINI_KEY) {

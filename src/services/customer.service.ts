@@ -1,7 +1,5 @@
-import { and, ilike } from "drizzle-orm";
 import { z } from "zod";
-import { db } from "../db";
-import { clientes } from "../db/schema";
+import type { CustomerRepository } from "../repositories/customer.repository";
 
 const customerQuerySchema = z.object({
     nome: z.string().optional(),
@@ -11,16 +9,14 @@ const customerQuerySchema = z.object({
 });
 
 export class CustomerService {
+    constructor(
+        private readonly customerRepository: CustomerRepository,
+    ) { }
+
     async getCustomers(query: Record<string, string | undefined>) {
         const { nome = '', grupo = '', limite = 10, pagina = 1 } = customerQuerySchema.parse(query);
         const offset = (pagina - 1) * limite;
-
-        const customers = await db.select()
-            .from(clientes)
-            .where(and(ilike(clientes.razao_cliente, `%${nome}%`), ilike(clientes.descricao_grupo, `%${grupo}%`)))
-            .limit(limite)
-            .offset(offset)
-            .execute();
+        const customers = await this.customerRepository.getCustomers({ name: nome, group: grupo, limit: limite, page: pagina, offset });
 
         return customers;
     }

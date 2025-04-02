@@ -1,21 +1,8 @@
 import { Elysia } from 'elysia';
+import { customerService, paymentService, productService, salesService } from '../config/deps';
 import { env } from '../config/env';
-import { PaymentRepository } from '../repositories/payment.repository';
-import { SalesRepository } from '../repositories/sales.repository';
-import { CustomerService } from '../services/customer.service';
-import { PaymentService } from '../services/payment.service';
-import { ProductService } from '../services/product.service';
-import { OpenAIService } from '../services/prompt/openai.service';
-import { SaleService } from '../services/sales.service';
 
 const routes = new Elysia();
-
-const paymentRepository = new PaymentRepository();
-const paymentService = new PaymentService(paymentRepository, new OpenAIService());
-const salesRepository = new SalesRepository();
-const salesService = new SaleService(salesRepository);
-const productService = new ProductService();
-const customerService = new CustomerService();
 
 routes.guard({
     beforeHandle({ headers }) {

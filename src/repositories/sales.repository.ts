@@ -132,7 +132,7 @@ export class SalesRepository {
             throw new Error("No sales data found.");
         }
 
-        const totalGeral = totalResult.rows[0]?.total_geral || 1;
+        const totalGeral = Number(totalResult.rows[0]?.total_geral) || 1;
 
         const sql = `
             SELECT
@@ -162,7 +162,7 @@ export class SalesRepository {
             throw new Error("No sales data found.");
         }
 
-        const totalGeral = totalResult.rows[0]?.total_geral || 1;
+        const totalGeral = Number(totalResult.rows[0]?.total_geral) || 1;
 
         const sql = `
             SELECT
