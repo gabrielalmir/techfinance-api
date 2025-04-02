@@ -1,5 +1,6 @@
 import { CustomerRepository } from "../repositories/customer.repository";
 import { PaymentRepository } from "../repositories/payment.repository";
+import { ProductRepository } from "../repositories/product.repository";
 import { SalesRepository } from "../repositories/sales.repository";
 import { CustomerService } from "../services/customer.service";
 import { PaymentService } from "../services/payment.service";
@@ -16,7 +17,8 @@ export const salesRepository = new SalesRepository();
 export const salesService = new SaleService(salesRepository);
 
 // Products
-export const productService = new ProductService();
+export const productRepository = new ProductRepository();
+export const productService = new ProductService(productRepository);
 
 // Customers
 export const customerRepository = new CustomerRepository();
