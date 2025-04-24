@@ -1,9 +1,11 @@
 import { Elysia, t } from 'elysia';
 import { tryCatchAsync } from 'resulta';
-import { customerService } from '../config/deps';
+import { customerService, logger } from '../config/deps';
 
 export const customerRoutes = (app: Elysia) => {
     app.get('/clientes', async ({ query }) => {
+        logger.info({ query }, 'Iniciando busca de clientes');
+
         const { nome = '', grupo = '', limite = 10, pagina = 1 } = query;
         const offset = (pagina - 1) * limite;
 
@@ -12,8 +14,14 @@ export const customerRoutes = (app: Elysia) => {
         );
 
         if (!result.ok) {
+            logger.error({ error: result.error, query }, 'Erro ao buscar clientes');
             return { status: 500, message: 'Erro ao obter clientes' };
         }
+
+        logger.info({
+            total: result.value.length,
+            query
+        }, 'Busca de clientes concluída com sucesso');
 
         return result.value;
     }, {

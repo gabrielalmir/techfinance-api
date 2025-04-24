@@ -7,6 +7,7 @@ import { PaymentService } from "../services/payment.service";
 import { ProductService } from "../services/product.service";
 import { OpenAIService } from "../services/prompt/openai.service";
 import { SaleService } from "../services/sales.service";
+import logger from './logger';
 
 // Payment
 export const paymentRepository = new PaymentRepository();
@@ -23,3 +24,5 @@ export const productService = new ProductService(productRepository);
 // Customers
 export const customerRepository = new CustomerRepository();
 export const customerService = new CustomerService(customerRepository);
+
+export { logger };
