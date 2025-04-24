@@ -1,25 +1,27 @@
-import { Elysia } from 'elysia';
-import { z } from 'zod';
+import { Elysia, t } from 'elysia';
+import { tryCatchAsync } from 'resulta';
 import { customerService } from '../config/deps';
-
-const customerQuerySchema = z.object({
-    nome: z.string().optional(),
-    grupo: z.string().optional(),
-    limite: z.coerce.number().optional(),
-    pagina: z.coerce.number().optional(),
-});
 
 export const customerRoutes = (app: Elysia) => {
     app.get('/clientes', async ({ query }) => {
-        try {
-            const parsedQuery = customerQuerySchema.parse(query);
+        const { nome = '', grupo = '', limite = 10, pagina = 1 } = query;
+        const offset = (pagina - 1) * limite;
 
-            const { nome = '', grupo = '', limite = 10, pagina = 1 } = parsedQuery;
-            const offset = (pagina - 1) * limite;
+        const result = await tryCatchAsync(() =>
+            customerService.getCustomers({ name: nome, group: grupo, limit: limite, page: pagina, offset })
+        );
 
-            return await customerService.getCustomers({ name: nome, group: grupo, limit: limite, page: pagina, offset });
-        } catch (error) {
+        if (!result.ok) {
             return { status: 500, message: 'Erro ao obter clientes' };
         }
+
+        return result.value;
+    }, {
+        query: t.Object({
+            nome: t.Optional(t.String()),
+            grupo: t.Optional(t.String()),
+            limite: t.Optional(t.Number()),
+            pagina: t.Optional(t.Number())
+        })
     });
 };
