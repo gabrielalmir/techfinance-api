@@ -1,5 +1,7 @@
 import { z } from "zod";
+import { logger } from '../config/deps';
 import { SalesRepository } from "../repositories/sales.repository";
+import { cacheService } from './cache.service';
 
 export const saleQuerySchema = z.object({
     limite: z.coerce.number().optional(),
@@ -16,13 +18,39 @@ export class SaleService {
     }
 
     async getTopProductsByQuantity(query: Record<string, string | undefined>) {
+        const cacheKey = `top_products_quantity:${JSON.stringify(query)}`;
+
+        const cached = await cacheService.get(cacheKey);
+        if (cached) {
+            logger.info({ query }, 'Retornando produtos mais vendidos do cache');
+            return cached;
+        }
+
+        logger.info({ query }, 'Buscando produtos mais vendidos do banco de dados');
         const { limite = 10 } = saleQuerySchema.parse(query);
-        return this.salesRepository.getTopProductsByQuantity(limite);
+        const products = await this.salesRepository.getTopProductsByQuantity(limite);
+
+        await cacheService.set(cacheKey, products);
+
+        return products;
     }
 
     async getTopProductsByValue(query: Record<string, string | undefined>) {
+        const cacheKey = `top_products_value:${JSON.stringify(query)}`;
+
+        const cached = await cacheService.get(cacheKey);
+        if (cached) {
+            logger.info({ query }, 'Retornando produtos de maior valor do cache');
+            return cached;
+        }
+
+        logger.info({ query }, 'Buscando produtos de maior valor do banco de dados');
         const { limite = 10 } = saleQuerySchema.parse(query);
-        return this.salesRepository.getTopProductsByValue(limite);
+        const products = await this.salesRepository.getTopProductsByValue(limite);
+
+        await cacheService.set(cacheKey, products);
+
+        return products;
     }
 
     async getCompanySalesParticipation(query: Record<string, string | undefined>) {
@@ -36,7 +64,20 @@ export class SaleService {
     }
 
     async getPriceVariationByProduct(query: Record<string, string | undefined>) {
+        const cacheKey = `price_variation:${JSON.stringify(query)}`;
+
+        const cached = await cacheService.get(cacheKey);
+        if (cached) {
+            logger.info({ query }, 'Retornando variação de preço do cache');
+            return cached;
+        }
+
+        logger.info({ query }, 'Buscando variação de preço do banco de dados');
         const { limite = 10 } = saleQuerySchema.parse(query);
-        return this.salesRepository.getPriceVariationByProduct(limite);
+        const variations = await this.salesRepository.getPriceVariationByProduct(limite);
+
+        await cacheService.set(cacheKey, variations);
+
+        return variations;
     }
 }
