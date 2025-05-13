@@ -57,3 +57,5 @@ export const vendas = pgTable("fatec_vendas", {
     valorUnitario: text("valor_unitario").notNull(),
     total: text("total").notNull(),
 });
+
+export type ProductQueryResult = typeof produtos.$inferSelect;

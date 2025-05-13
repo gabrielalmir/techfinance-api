@@ -20,7 +20,7 @@ class CacheService {
         return CacheService.instance;
     }
 
-    public async get<T>(key: string): Promise<T | null> {
+    public async get<T = any>(key: string): Promise<T | null> {
         const value = this.cache.get<T>(key);
         if (value) {
             logger.debug({ key }, 'Cache hit');

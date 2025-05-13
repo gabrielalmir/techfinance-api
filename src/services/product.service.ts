@@ -1,4 +1,5 @@
 import { logger } from '../config/deps';
+import type { ProductQueryResult } from '../db/schema';
 import { ProductRepository } from '../repositories/product.repository';
 import { cacheService } from './cache.service';
 
@@ -12,11 +13,11 @@ interface GetProductsParams {
 export class ProductService {
     constructor(private readonly repository: ProductRepository) { }
 
-    async getProducts(params: GetProductsParams) {
+    async getProducts(params: GetProductsParams): Promise<ProductQueryResult[]> {
         const cacheKey = `products:${JSON.stringify(params)}`;
 
         // Tentar obter do cache
-        const cached = await cacheService.get(cacheKey);
+        const cached = await cacheService.get<ProductQueryResult[]>(cacheKey);
         if (cached) {
             logger.info({ params }, 'Retornando produtos do cache');
             return cached;
