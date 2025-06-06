@@ -1,9 +1,8 @@
-import { sql } from "drizzle-orm";
 import { db } from "../db";
 
 export class PaymentRepository {
     async getSummaryAIData(): Promise<any> {
-        return await db.execute(sql`
+        return await db`
             SELECT
             documento,
             titulo,
@@ -14,11 +13,11 @@ export class PaymentRepository {
             FROM fatec_contas_receber f
             WHERE data_vencimento < '2024-04-30'
             ORDER BY CAST(f.data_vencimento as DATE) ASC
-        `);
+        `;
     }
 
     async getSummaryData(): Promise<any> {
-        return await db.execute(sql`
+        return await db`
             WITH CONTAS AS (
                 SELECT
                     CAST(data_vencimento AS DATE) - CURRENT_DATE AS dif_data,
@@ -41,6 +40,6 @@ export class PaymentRepository {
                 COUNT(CASE WHEN status_vencimento = 'Vencimento superior a 30 dias' THEN 1 END) AS vencimento_superior_30,
                 COUNT(CASE WHEN status_vencimento = 'Vencimento hoje' THEN 1 END) AS vencimento_hoje
             FROM CONTAS;
-        `);
+        `;
     }
 }

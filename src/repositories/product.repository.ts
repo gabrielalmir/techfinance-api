@@ -1,6 +1,5 @@
-import { and, ilike } from "drizzle-orm";
 import { db } from "../db";
-import { produtos } from "../db/schema";
+import type { Produto } from "../db/schema";
 
 export interface GetProductQuery {
     name?: string;
@@ -10,14 +9,14 @@ export interface GetProductQuery {
 }
 
 export class ProductRepository {
-    async getProducts({ name = '', group = '', limit = 10, offset = 0 }: GetProductQuery) {
-        const products = await db.select()
-            .from(produtos)
-            .where(and(ilike(produtos.descricao_produto, `%${name}%`), ilike(produtos.descricao_grupo, `%${group}%`)))
-            .limit(limit)
-            .offset(offset)
-            .execute();
-
-        return products;
+    async getProducts({ name = '', group = '', limit = 10, offset = 0 }: GetProductQuery): Promise<Produto[]> {
+        const products = await db`
+            SELECT * FROM fatec_produtos
+            WHERE descricao_produto ILIKE ${`%${name}%`}
+            AND descricao_grupo ILIKE ${`%${group}%`}
+            LIMIT ${limit}
+            OFFSET ${offset}
+        `;
+        return products as Produto[];
     }
 }

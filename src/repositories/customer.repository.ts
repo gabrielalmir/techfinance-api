@@ -1,6 +1,5 @@
-import { and, ilike } from "drizzle-orm";
 import { db } from "../db";
-import { clientes } from "../db/schema";
+import type { Cliente } from "../db/schema";
 
 export interface GetCustomersQuery {
     name: string;
@@ -11,14 +10,14 @@ export interface GetCustomersQuery {
 }
 
 export class CustomerRepository {
-    async getCustomers(query: GetCustomersQuery) {
-        const customers = await db.select()
-            .from(clientes)
-            .where(and(ilike(clientes.razao_cliente, `%${query.name}%`), ilike(clientes.descricao_grupo, `%${query.group}%`)))
-            .limit(query.limit)
-            .offset(query.offset)
-            .execute();
-
-        return customers;
+    async getCustomers(query: GetCustomersQuery): Promise<Cliente[]> {
+        const customers = await db`
+            SELECT * FROM fatec_clientes
+            WHERE razao_cliente ILIKE ${`%${query.name}%`}
+            AND descricao_grupo ILIKE ${`%${query.group}%`}
+            LIMIT ${query.limit}
+            OFFSET ${query.offset}
+        `;
+        return customers as Cliente[];
     }
 }
