@@ -13,10 +13,6 @@ export const paymentRoutes = (app: Elysia) => {
         }
 
         return result.value;
-    }, {
-        query: t.Object({
-            prompt: t.Optional(t.String())
-        })
     });
 
     app.get('/contas_receber/ai', async ({ query }) => {
@@ -29,5 +25,9 @@ export const paymentRoutes = (app: Elysia) => {
         }
 
         return result.value;
+    }, {
+        query: t.Object({
+            prompt: t.String()
+        })
     });
 };
