@@ -1,78 +1,153 @@
 
-# TechFinance
+# TechFinance API
 
 TechFinance é uma solução mobile para prover informações para apoio na tomada de decisões. Esta é uma API backend construída utilizando o framework **Elysia** (na linguagem TypeScript) e executada com **Bun.js**.
 
-## Funcionalidades
+## 📖 Documentação
 
-- Buscar detalhes de produtos com base em consultas (descrição e grupo).
-- Buscar detalhes de clientes com base em consultas (nome e grupo).
-- Suporte à paginação (limite e offset são usados para produtos e clientes).
-- Utiliza uma conexão com banco de dados para executar consultas SQL dinamicamente.
+- **[📋 Documentação da API](./API_DOCUMENTATION.md)** - Guia completo dos endpoints, parâmetros e respostas
+- **[👨‍💻 Guia do Desenvolvedor](./DEVELOPER_GUIDE.md)** - Instruções para desenvolvimento, testes e deploy
+- **[🔗 Swagger UI](https://techfinance-api.fly.dev/docs)** - Documentação interativa (produção)
 
-## Dependências
-
-- [Elysia](https://elysia.js.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Manipulação de Conexão com Banco de Dados (pacotes config e db)](./internal/db)
-- Modelos Customizados (`internal/models`)
-
-## Endpoints
-
-### Buscar Produtos
-
-**Endpoint:** `/products`
-
-**Método:** `GET`
-
-Recupera uma lista de produtos com base nos parâmetros de consulta:
-
-- `descricao`: Filtro para a descrição do produto.
-- `grupo`: Filtro para o grupo do produto.
-- `limite`: Limita o número de produtos retornados (padrão é 10).
-- `pagina`: Especifica a página de resultados (padrão é 1).
-
-Exemplo de uso:
-
-```
-GET /products?descricao=celular&grupo=eletronicos&limite=10&pagina=1
-```
-
-### Buscar Clientes
-
-**Endpoint:** `/customers`
-
-**Método:** `GET`
-
-Recupera uma lista de clientes com base nos parâmetros de consulta:
-
-- `nome`: Filtro para o nome do cliente.
-- `grupo`: Filtro para o grupo do cliente.
-- `limite`: Limita o número de clientes retornados (padrão é 10).
-- `pagina`: Especifica a página de resultados (padrão é 1).
-
-Exemplo de uso:
-
-```
-GET /customers?nome=joao&grupo=varejo&limite=10&pagina=2
-```
-
-## Consultas ao Banco de Dados
-
-Produtos e clientes são recuperados do banco de dados utilizando consultas SQL dinâmicas:
-
-- Os produtos são selecionados na tabela `fatec_produtos`.
-- Os clientes são selecionados na tabela `fatec_clientes`.
-
-As consultas incluem filtros de busca usando operadores `LIKE` e suporte à paginação usando `LIMIT` e `OFFSET`.
-
-## Como Executar
-
-1. Instale Bun.js e Elysia.
-2. Configure o banco de dados e a conexão no pacote `config`.
-3. Execute a aplicação:
+## 🚀 Início Rápido
 
 ```bash
-bun run main.ts
+# Instalar dependências
+bun install
+
+# Configurar variáveis de ambiente
+cp .env.example .env
+
+# Executar migrações
+bun run db:migrate
+
+# Iniciar servidor de desenvolvimento
+bun run dev
 ```
+
+## 🛠 Funcionalidades
+
+- ✅ Buscar produtos com filtros e paginação
+- ✅ Buscar clientes com filtros e paginação
+- ✅ Consultar vendas e relatórios de performance
+- ✅ Resumo de contas a receber com análise por IA
+- ✅ Participação de empresas nas vendas
+- ✅ Produtos mais vendidos e de maior valor
+- ✅ Variação de preços de produtos
+- ✅ Autenticação via Bearer Token
+- ✅ Documentação automática (Swagger)
+- ✅ Logs estruturados
+- ✅ Tratamento robusto de erros
+
+## 🏗 Tecnologias
+
+- **[Elysia](https://elysia.js.org/)** - Framework web moderno para Bun
+- **[Bun.js](https://bun.sh/)** - Runtime JavaScript ultra-rápido
+- **[TypeScript](https://www.typescriptlang.org/)** - Tipagem estática
+- **[Drizzle ORM](https://orm.drizzle.team/)** - ORM type-safe
+- **[Vitest](https://vitest.dev/)** - Framework de testes
+- **[Swagger](https://swagger.io/)** - Documentação da API
+
+## 📌 Principais Endpoints
+
+### Produtos
+- `GET /produtos` - Lista produtos com filtros e paginação
+- `GET /produtos/mais-vendidos` - Produtos mais vendidos por quantidade
+- `GET /produtos/maior-valor` - Produtos com maior valor de vendas
+- `GET /produtos/variacao-preco` - Variação de preços dos produtos
+
+### Clientes
+- `GET /clientes` - Lista clientes com filtros e paginação
+
+### Vendas
+- `GET /vendas` - Lista vendas com filtros
+- `GET /empresas/participacao` - Participação de empresas nas vendas
+- `GET /empresas/participacao-por-valor` - Participação por valor monetário
+
+### Contas a Receber
+- `GET /contas_receber/resumo` - Resumo por períodos de vencimento
+- `GET /contas_receber/ai` - Análise e sugestões com IA
+
+> 📋 **Documentação completa:** Veja [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) para detalhes de todos os endpoints, parâmetros e exemplos de resposta.
+
+## 🗄 Banco de Dados
+
+A API utiliza consultas SQL dinâmicas para recuperar dados:
+
+- **Produtos:** Tabela `fatec_produtos`
+- **Clientes:** Tabela `fatec_clientes`
+- **Vendas:** Tabela `fatec_vendas`
+- **Contas a Receber:** Tabela `fatec_contas_receber`
+
+As consultas incluem:
+- Filtros de busca usando operadores `LIKE`
+- Paginação com `LIMIT` e `OFFSET`
+- Joins otimizados para relatórios complexos
+
+## 🚀 Deploy
+
+### Desenvolvimento
+```bash
+bun run dev
+```
+
+### Produção (Fly.io)
+```bash
+flyctl deploy
+```
+
+### Docker
+```bash
+docker build -t techfinance-api .
+docker run -p 3000:3000 techfinance-api
+```
+
+## 🧪 Testes
+
+```bash
+# Executar todos os testes
+bun test
+
+# Testes em modo watch
+bun test --watch
+
+# Testes com coverage
+bun test --coverage
+```
+
+## 📝 Logs
+
+A aplicação utiliza logs estruturados que registram:
+- Início e fim de operações
+- Parâmetros de entrada
+- Erros e exceções
+- Métricas de performance
+
+## 🔒 Autenticação
+
+Todos os endpoints requerem autenticação via Bearer Token:
+
+```bash
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+     https://techfinance-api.fly.dev/produtos
+```
+
+## 📊 Monitoramento
+
+- **Health Check:** Automático via Fly.io
+- **Logs:** Centralizados e estruturados
+- **Métricas:** Performance e uso de recursos
+- **Swagger UI:** Documentação sempre atualizada
+
+## 🤝 Contribuição
+
+1. Fork do repositório
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
+3. Commit suas mudanças (`git commit -am 'Adiciona nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
