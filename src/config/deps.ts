@@ -3,6 +3,7 @@ import { PaymentRepository } from "../repositories/payment.repository";
 import { ProductRepository } from "../repositories/product.repository";
 import { SalesRepository } from "../repositories/sales.repository";
 import { CustomerService } from "../services/customer.service";
+import { MCPService } from "../services/mcp/mcp.service";
 import { PaymentService } from "../services/payment.service";
 import { ProductService } from "../services/product.service";
 import { OpenAIService } from "../services/prompt/openai.service";
@@ -25,4 +26,8 @@ export const productService = new ProductService(productRepository);
 export const customerRepository = new CustomerRepository();
 export const customerService = new CustomerService(customerRepository);
 
+// MCP Service
+export const mcpService = new MCPService();
+
 export { logger };
+
