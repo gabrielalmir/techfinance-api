@@ -4,8 +4,21 @@ import type { Venda } from "../db/schema";
 
 export class SalesRepository {
     async getSales(limite: number, offset: number): Promise<Venda[]> {
-        const result = await db`SELECT * FROM fatec_vendas LIMIT ${limite} OFFSET ${offset}`;
-        return result as Venda[];
+        try {
+            // Validar e limitar os parâmetros para evitar overflow
+            const limiteSafe = Math.min(Math.max(1, Math.floor(limite)), 1000); // Min: 1, Max: 1000
+            const offsetSafe = Math.max(0, Math.floor(offset)); // Min: 0
+
+            logger.warn(`getSales called with limite: ${limite}, offset: ${offset} -> safe values: ${limiteSafe}, ${offsetSafe}`);
+
+            const result = await db`SELECT * FROM fatec_vendas LIMIT ${limiteSafe} OFFSET ${offsetSafe}`;
+            return result as Venda[];
+        } catch (err: any) {
+            logger.error('Error in getSales: ' + err.message);
+            console.error('Full error details:', err);
+            // Retorna array vazio em caso de erro
+            return [];
+        }
     }
 
     async getTopProductsByQuantity(limite: number) {
@@ -54,18 +67,30 @@ export class SalesRepository {
     }
 
     async getPriceVariationByProduct(limite: number) {
-        const result = await db`
-            SELECT codigo_produto, descricao_produto,
-                MIN(CAST(REPLACE(REPLACE(valor_unitario, '.', ''), ',', '.') AS NUMERIC)) AS valor_minimo,
-                MAX(CAST(REPLACE(REPLACE(valor_unitario, '.', ''), ',', '.') AS NUMERIC)) AS valor_maximo,
-                ROUND(((MAX(CAST(REPLACE(REPLACE(valor_unitario, '.', ''), ',', '.') AS NUMERIC)) /
-                        MIN(CAST(REPLACE(REPLACE(valor_unitario, '.', ''), ',', '.') AS NUMERIC))) - 1) * 100, 4) AS percentual_diferenca
-            FROM fatec_vendas
-            GROUP BY codigo_produto, descricao_produto
-            ORDER BY percentual_diferenca DESC
-            LIMIT ${limite}
-        `;
-        return result;
+        try {
+            const result = await db`
+                SELECT codigo_produto, descricao_produto,
+                    MIN(CAST(REPLACE(REPLACE(valor_unitario, '.', ''), ',', '.') AS NUMERIC)) AS valor_minimo,
+                    MAX(CAST(REPLACE(REPLACE(valor_unitario, '.', ''), ',', '.') AS NUMERIC)) AS valor_maximo,
+                    CASE
+                        WHEN MIN(CAST(REPLACE(REPLACE(valor_unitario, '.', ''), ',', '.') AS NUMERIC)) > 0 THEN
+                            CAST(ROUND(CAST(((MAX(CAST(REPLACE(REPLACE(valor_unitario, '.', ''), ',', '.') AS NUMERIC)) /
+                                    MIN(CAST(REPLACE(REPLACE(valor_unitario, '.', ''), ',', '.') AS NUMERIC))) - 1) * 100 AS NUMERIC), 4) AS NUMERIC)
+                        ELSE 0
+                    END AS percentual_diferenca
+                FROM fatec_vendas
+                WHERE CAST(REPLACE(REPLACE(valor_unitario, '.', ''), ',', '.') AS NUMERIC) > 0
+                GROUP BY codigo_produto, descricao_produto
+                HAVING MIN(CAST(REPLACE(REPLACE(valor_unitario, '.', ''), ',', '.') AS NUMERIC)) > 0
+                   AND MAX(CAST(REPLACE(REPLACE(valor_unitario, '.', ''), ',', '.') AS NUMERIC)) > 0
+                ORDER BY percentual_diferenca DESC
+                LIMIT ${limite}
+            `;
+            return result;
+        } catch (err: any) {
+            console.error('Error in getPriceVariationByProduct:', err);
+            return [];
+        }
     }
 
     async getCompanySalesParticipation(limite: number) {
@@ -87,16 +112,24 @@ export class SalesRepository {
             const result = await db`
                 SELECT nome_fantasia,
                     SUM(CAST(REPLACE(REPLACE(qtde, '.', ''), ',', '.') AS NUMERIC)) AS quantidade_total,
-                    ROUND((SUM(CAST(REPLACE(REPLACE(qtde, '.', ''), ',', '.') AS NUMERIC)) / ${totalGeral}) * 100, 2) AS percentual
+                    CASE
+                        WHEN ${totalGeral} > 0 THEN
+                            CAST(ROUND(CAST((SUM(CAST(REPLACE(REPLACE(qtde, '.', ''), ',', '.') AS NUMERIC)) / ${totalGeral}) * 100 AS NUMERIC), 2) AS NUMERIC)
+                        ELSE 0
+                    END AS percentual
                 FROM fatec_vendas
+                WHERE CAST(REPLACE(REPLACE(qtde, '.', ''), ',', '.') AS NUMERIC) > 0
                 GROUP BY nome_fantasia
+                HAVING SUM(CAST(REPLACE(REPLACE(qtde, '.', ''), ',', '.') AS NUMERIC)) > 0
                 ORDER BY quantidade_total DESC
                 LIMIT ${limite}
             `;
             return result;
         } catch (err: any) {
             logger.error('Error in getCompanySalesParticipation: ' + err.message);
-            throw new Error(`Failed to get company sales participation: ${err.message || err}`);
+            console.error('Full error details:', err);
+            // Retorna array vazio em caso de erro em vez de lançar exceção
+            return [];
         }
     }
 
@@ -109,26 +142,34 @@ export class SalesRepository {
             }
             const totalGeral = Number(totalResult[0]?.total_geral) || 1;
 
-            if (totalGeral === 0) {
-                logger.warn("Total sales quantity is zero, cannot calculate participation");
+            if (totalGeral === 0 || totalGeral === null || isNaN(totalGeral)) {
+                logger.warn("Total sales value is zero or invalid, cannot calculate participation");
                 return [];
             }
 
-            logger.warn(totalGeral)
+            logger.warn(`Total geral para cálculo: ${totalGeral}`)
 
             const result = await db`
                 SELECT nome_fantasia,
                     SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) AS valor_total,
-                    CAST(ROUND(CAST((SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) / ${totalGeral}) * 100 AS NUMERIC), 2) AS NUMERIC) AS percentual
+                    CASE
+                        WHEN ${totalGeral} > 0 THEN
+                            CAST(ROUND(CAST((SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) / ${totalGeral}) * 100 AS NUMERIC), 2) AS NUMERIC)
+                        ELSE 0
+                    END AS percentual
                 FROM fatec_vendas
+                WHERE CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC) > 0
                 GROUP BY nome_fantasia
+                HAVING SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) > 0
                 ORDER BY valor_total DESC
                 LIMIT ${limite}
             `;
             return result;
         } catch (err: any) {
             logger.error('Error in getCompanySalesParticipationByValue:' + err.message);
-            throw new Error(`Failed to get company sales participation by value: ${err.message || err}`);
+            console.error('Full error details:', err);
+            // Retorna array vazio em caso de erro em vez de lançar exceção
+            return [];
         }
     }
 }

@@ -12,9 +12,23 @@ export class SaleService {
     constructor(private readonly salesRepository: SalesRepository) { }
 
     async getSales(query: Record<string, any>) {
-        const { limit, pagina = 0 } = query;
-        const offset = pagina * limit;
-        return this.salesRepository.getSales(limit, offset);
+        try {
+            // Validar e definir valores padrão seguros - múltiplos nomes de parâmetros
+            const limite = Number(query.limit || query.limite || 100);
+            const pagina = Number(query.page || query.pagina || 0);
+
+            // Validar se são números válidos
+            const limiteSafe = isNaN(limite) ? 100 : Math.min(Math.max(1, limite), 1000);
+            const paginaSafe = isNaN(pagina) ? 0 : Math.max(0, pagina);
+            const offset = paginaSafe * limiteSafe;
+
+            logger.warn(`getSales service called with query:`, query, `-> processed: limite=${limiteSafe}, pagina=${paginaSafe}, offset=${offset}`);
+
+            return await this.salesRepository.getSales(limiteSafe, offset);
+        } catch (error: any) {
+            logger.error('Error in getSales service:', error.message);
+            return [];
+        }
     }
 
     async getTopProductsByQuantity(query: Record<string, string | undefined>) {
