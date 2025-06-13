@@ -9,7 +9,10 @@ export const salesRoutes = (app: Elysia) => {
 
         if (!result.ok) {
             logger.error({ error: result.error, query }, 'Erro ao obter vendas');
-            return { status: 500, message: 'Erro ao obter vendas' };
+            return new Response(JSON.stringify({ status: 500, message: 'Erro ao obter vendas' }), {
+                headers: { 'Content-Type': 'application/json' },
+                status: 500
+            });
         }
 
         logger.info({
@@ -17,7 +20,9 @@ export const salesRoutes = (app: Elysia) => {
             query
         }, 'Busca de vendas concluída com sucesso');
 
-        return result.value;
+        return new Response(JSON.stringify(result.value), {
+            headers: { 'Content-Type': 'application/json' }
+        });
     });
 
     app.get('/empresas/participacao', async ({ query }) => {
@@ -26,7 +31,10 @@ export const salesRoutes = (app: Elysia) => {
 
         if (!result.ok) {
             logger.error({ error: result.error, query }, 'Erro ao obter participação de empresas');
-            return { status: 500, message: 'Erro ao obter participação de empresas' };
+            return new Response(JSON.stringify({ status: 500, message: 'Erro ao obter participação de empresas' }), {
+                headers: { 'Content-Type': 'application/json' },
+                status: 500
+            });
         }
 
         logger.info({
@@ -34,7 +42,9 @@ export const salesRoutes = (app: Elysia) => {
             query
         }, 'Busca de participação de empresas concluída com sucesso');
 
-        return result.value;
+        return new Response(JSON.stringify(result.value), {
+            headers: { 'Content-Type': 'application/json' }
+        });
     });
 
     app.get('/empresas/participacao-por-valor', async ({ query }) => {

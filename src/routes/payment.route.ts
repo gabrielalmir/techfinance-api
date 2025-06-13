@@ -9,10 +9,15 @@ export const paymentRoutes = (app: Elysia) => {
 
         if (!result.ok) {
             logger.error({ error: result.error }, 'Erro ao obter resumo de contas a receber');
-            return { status: 500, message: 'Erro ao obter resumo de contas a receber' };
+            return new Response(JSON.stringify({ status: 500, message: 'Erro ao obter resumo de contas a receber' }), {
+                headers: { 'Content-Type': 'application/json' },
+                status: 500
+            });
         }
 
-        return result.value;
+        return new Response(JSON.stringify(result.value), {
+            headers: { 'Content-Type': 'application/json' }
+        });
     });
 
     app.get('/contas_receber/ai', async ({ query }) => {
@@ -21,10 +26,15 @@ export const paymentRoutes = (app: Elysia) => {
 
         if (!result.ok) {
             logger.error({ error: result.error }, 'Erro ao obter resumo AI de contas a receber');
-            return { status: 500, message: 'Erro ao obter resumo AI de contas a receber' };
+            return new Response(JSON.stringify({ status: 500, message: 'Erro ao obter resumo AI de contas a receber' }), {
+                headers: { 'Content-Type': 'application/json' },
+                status: 500
+            });
         }
 
-        return result.value;
+        return new Response(JSON.stringify(result.value), {
+            headers: { 'Content-Type': 'application/json' }
+        });
     }, {
         query: t.Object({
             prompt: t.String()

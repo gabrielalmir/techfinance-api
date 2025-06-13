@@ -15,7 +15,10 @@ export const customerRoutes = (app: Elysia) => {
 
         if (!result.ok) {
             logger.error({ error: result.error, query }, 'Erro ao buscar clientes');
-            return { status: 500, message: 'Erro ao obter clientes' };
+            return new Response(JSON.stringify({ status: 500, message: 'Erro ao obter clientes' }), {
+                headers: { 'Content-Type': 'application/json' },
+                status: 500
+            });
         }
 
         logger.info({
@@ -23,7 +26,9 @@ export const customerRoutes = (app: Elysia) => {
             query
         }, 'Busca de clientes concluída com sucesso');
 
-        return result.value;
+        return new Response(JSON.stringify(result.value), {
+            headers: { 'Content-Type': 'application/json' }
+        });
     }, {
         query: t.Object({
             nome: t.Optional(t.String()),

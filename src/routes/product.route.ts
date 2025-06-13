@@ -15,7 +15,10 @@ export const productsRoutes = (app: Elysia) => {
 
         if (!result.ok) {
             logger.error({ error: result.error, query }, 'Erro ao buscar produtos');
-            return { status: 500, message: 'Erro ao obter produtos' };
+            return new Response(JSON.stringify({ status: 500, message: 'Erro ao obter produtos' }), {
+                headers: { 'Content-Type': 'application/json' },
+                status: 500
+            });
         }
 
         logger.info({
@@ -23,7 +26,9 @@ export const productsRoutes = (app: Elysia) => {
             query
         }, 'Busca de produtos concluída com sucesso');
 
-        return result.value;
+        return new Response(JSON.stringify(result.value), {
+            headers: { 'Content-Type': 'application/json' }
+        });
     }, {
         query: t.Object({
             nome: t.Optional(t.String()),
@@ -40,7 +45,10 @@ export const productsRoutes = (app: Elysia) => {
 
         if (!result.ok) {
             logger.error({ error: result.error, query }, 'Erro ao buscar produtos mais vendidos');
-            return { status: 500, message: 'Erro ao obter produtos mais vendidos' };
+            return new Response(JSON.stringify({ status: 500, message: 'Erro ao obter produtos mais vendidos' }), {
+                headers: { 'Content-Type': 'application/json' },
+                status: 500
+            });
         }
 
         logger.info({
@@ -48,7 +56,9 @@ export const productsRoutes = (app: Elysia) => {
             query
         }, 'Busca de produtos mais vendidos concluída com sucesso');
 
-        return result.value;
+        return new Response(JSON.stringify(result.value), {
+            headers: { 'Content-Type': 'application/json' }
+        });
     });
 
     app.get('/produtos/maior-valor', async ({ query }) => {
@@ -58,7 +68,10 @@ export const productsRoutes = (app: Elysia) => {
 
         if (!result.ok) {
             logger.error({ error: result.error, query }, 'Erro ao buscar produtos de maior valor');
-            return { status: 500, message: 'Erro ao obter produtos de maior valor' };
+            return new Response(JSON.stringify({ status: 500, message: 'Erro ao obter produtos de maior valor' }), {
+                headers: { 'Content-Type': 'application/json' },
+                status: 500
+            });
         }
 
         logger.info({
@@ -66,7 +79,9 @@ export const productsRoutes = (app: Elysia) => {
             query
         }, 'Busca de produtos de maior valor concluída com sucesso');
 
-        return result.value;
+        return new Response(JSON.stringify(result.value), {
+            headers: { 'Content-Type': 'application/json' }
+        });
     });
 
     app.get('/produtos/variacao-preco', async ({ query }) => {
@@ -76,7 +91,10 @@ export const productsRoutes = (app: Elysia) => {
 
         if (!result.ok) {
             logger.error({ error: result.error, query }, 'Erro ao buscar variação de preço dos produtos');
-            return { status: 500, message: 'Erro ao obter variação de preço dos produtos' };
+            return new Response(JSON.stringify({ status: 500, message: 'Erro ao obter variação de preço dos produtos' }), {
+                headers: { 'Content-Type': 'application/json' },
+                status: 500
+            });
         }
 
         logger.info({
@@ -84,6 +102,8 @@ export const productsRoutes = (app: Elysia) => {
             query
         }, 'Busca de variação de preço dos produtos concluída com sucesso');
 
-        return result.value;
+        return new Response(JSON.stringify(result.value), {
+            headers: { 'Content-Type': 'application/json' }
+        });
     });
 };
