@@ -8,6 +8,8 @@ import { productsRoutes } from './product.route';
 
 const routes = new Elysia();
 
+routes.get('/', () => 'ok');
+
 routes.guard({
     beforeHandle({ headers }) {
         const { authorization = '' } = headers;
