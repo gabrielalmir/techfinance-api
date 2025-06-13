@@ -1,3 +1,4 @@
+import logger from "../config/logger";
 import { db } from "../db";
 import type { Venda } from "../db/schema";
 
@@ -68,38 +69,66 @@ export class SalesRepository {
     }
 
     async getCompanySalesParticipation(limite: number) {
-        const totalResult = await db`SELECT SUM(CAST(REPLACE(REPLACE(qtde, '.', ''), ',', '.') AS NUMERIC)) AS total_geral FROM fatec_vendas`;
-        if (!totalResult || totalResult.length === 0) {
-            throw new Error("No sales data found.");
+        try {
+            const totalResult = await db`SELECT SUM(CAST(REPLACE(REPLACE(qtde, '.', ''), ',', '.') AS NUMERIC)) AS total_geral FROM fatec_vendas`;
+            if (!totalResult || totalResult.length === 0) {
+                console.warn("No sales data found for participation calculation");
+                return [];
+            }
+            const totalGeral = Number(totalResult[0]?.total_geral) || 1;
+
+            if (totalGeral === 0) {
+                logger.warn("Total sales quantity is zero, cannot calculate participation");
+                return [];
+            }
+
+            logger.warn(totalGeral);
+
+            const result = await db`
+                SELECT nome_fantasia,
+                    SUM(CAST(REPLACE(REPLACE(qtde, '.', ''), ',', '.') AS NUMERIC)) AS quantidade_total,
+                    ROUND((SUM(CAST(REPLACE(REPLACE(qtde, '.', ''), ',', '.') AS NUMERIC)) / ${totalGeral}) * 100, 2) AS percentual
+                FROM fatec_vendas
+                GROUP BY nome_fantasia
+                ORDER BY quantidade_total DESC
+                LIMIT ${limite}
+            `;
+            return result;
+        } catch (err: any) {
+            logger.error('Error in getCompanySalesParticipation: ' + err.message);
+            throw new Error(`Failed to get company sales participation: ${err.message || err}`);
         }
-        const totalGeral = Number(totalResult[0]?.total_geral) || 1;
-        const result = await db`
-            SELECT nome_fantasia,
-                SUM(CAST(REPLACE(REPLACE(qtde, '.', ''), ',', '.') AS NUMERIC)) AS quantidade_total,
-                ROUND((SUM(CAST(REPLACE(REPLACE(qtde, '.', ''), ',', '.') AS NUMERIC)) / ${totalGeral}) * 100, 2) AS percentual
-            FROM fatec_vendas
-            GROUP BY nome_fantasia
-            ORDER BY quantidade_total DESC
-            LIMIT ${limite}
-        `;
-        return result;
     }
 
     async getCompanySalesParticipationByValue(limite: number) {
-        const totalResult = await db`SELECT SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) AS total_geral FROM fatec_vendas`;
-        if (!totalResult || totalResult.length === 0) {
-            throw new Error("No sales data found.");
+        try {
+            const totalResult = await db`SELECT SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) AS total_geral FROM fatec_vendas`;
+            if (!totalResult || totalResult.length === 0) {
+                console.warn("No sales data found for value participation calculation");
+                return [];
+            }
+            const totalGeral = Number(totalResult[0]?.total_geral) || 1;
+
+            if (totalGeral === 0) {
+                logger.warn("Total sales quantity is zero, cannot calculate participation");
+                return [];
+            }
+
+            logger.warn(totalGeral)
+
+            const result = await db`
+                SELECT nome_fantasia,
+                    SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) AS valor_total,
+                    CAST(ROUND(CAST((SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) / ${totalGeral}) * 100 AS NUMERIC), 2) AS NUMERIC) AS percentual
+                FROM fatec_vendas
+                GROUP BY nome_fantasia
+                ORDER BY valor_total DESC
+                LIMIT ${limite}
+            `;
+            return result;
+        } catch (err: any) {
+            logger.error('Error in getCompanySalesParticipationByValue:' + err.message);
+            throw new Error(`Failed to get company sales participation by value: ${err.message || err}`);
         }
-        const totalGeral = Number(totalResult[0]?.total_geral) || 1;
-        const result = await db`
-            SELECT nome_fantasia,
-                SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) AS valor_total,
-                ROUND((SUM(CAST(REPLACE(REPLACE(total, '.', ''), ',', '.') AS NUMERIC)) / ${totalGeral}) * 100, 2) AS percentual
-            FROM fatec_vendas
-            GROUP BY nome_fantasia
-            ORDER BY valor_total DESC
-            LIMIT ${limite}
-        `;
-        return result;
     }
 }

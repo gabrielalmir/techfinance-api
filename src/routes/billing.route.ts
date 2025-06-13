@@ -27,7 +27,7 @@ export const salesRoutes = (app: Elysia) => {
 
     app.get('/empresas/participacao', async ({ query }) => {
         logger.info({ query }, 'Iniciando busca de participação de empresas');
-        const result = await tryCatchAsync(() => salesService.getCompanySalesParticipation(query));
+        const result = await tryCatchAsync(async () => await salesService.getCompanySalesParticipation(query));
 
         if (!result.ok) {
             logger.error({ error: result.error, query }, 'Erro ao obter participação de empresas');

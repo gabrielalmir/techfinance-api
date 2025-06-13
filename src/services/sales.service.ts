@@ -54,13 +54,25 @@ export class SaleService {
     }
 
     async getCompanySalesParticipation(query: Record<string, string | undefined>) {
-        const { limite = 10 } = saleQuerySchema.parse(query);
-        return this.salesRepository.getCompanySalesParticipation(limite);
+        try {
+            const { limite = 10 } = saleQuerySchema.parse(query);
+            logger.info({ query, limite }, 'Buscando participação de empresas');
+            return await this.salesRepository.getCompanySalesParticipation(limite);
+        } catch (error) {
+            logger.error({ error, query }, 'Erro ao buscar participação de empresas');
+            throw error;
+        }
     }
 
     async getCompanySalesParticipationByValue(query: Record<string, string | undefined>) {
-        const { limite = 10 } = saleQuerySchema.parse(query);
-        return this.salesRepository.getCompanySalesParticipationByValue(limite);
+        try {
+            const { limite = 10 } = saleQuerySchema.parse(query);
+            logger.info({ query, limite }, 'Buscando participação de empresas por valor');
+            return await this.salesRepository.getCompanySalesParticipationByValue(limite);
+        } catch (error) {
+            logger.error({ error, query }, 'Erro ao buscar participação de empresas por valor');
+            throw error;
+        }
     }
 
     async getPriceVariationByProduct(query: Record<string, string | undefined>) {
