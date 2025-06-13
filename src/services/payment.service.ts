@@ -38,7 +38,26 @@ export class PaymentService {
     }
 
     async summary() {
-        const result = await this.paymentRepository.getSummaryData();
-        return result.rows[0];
+        try {
+            const result = await this.paymentRepository.getSummaryData();
+            console.log('Summary data result:', result);
+
+            if (!result || !result.rows || result.rows.length === 0) {
+                console.warn('No summary data found, returning empty structure');
+                return {
+                    outro: 0,
+                    atraso_30_60: 0,
+                    atraso_ate_30: 0,
+                    vence_ate_30: 0,
+                    vencimento_superior_30: 0,
+                    vencimento_hoje: 0
+                };
+            }
+
+            return result.rows[0];
+        } catch (error) {
+            console.error('Error in summary service:', error);
+            throw new Error(`Failed to get payment summary: ${error}`);
+        }
     }
 }

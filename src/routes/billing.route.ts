@@ -53,7 +53,10 @@ export const salesRoutes = (app: Elysia) => {
 
         if (!result.ok) {
             logger.error({ error: result.error, query }, 'Erro ao obter participação de empresas por valor');
-            return { status: 500, message: 'Erro ao obter participação de empresas por valor' };
+            return new Response(JSON.stringify({ status: 500, message: 'Erro ao obter participação de empresas por valor' }), {
+                headers: { 'Content-Type': 'application/json' },
+                status: 500
+            });
         }
 
         logger.info({
@@ -61,6 +64,8 @@ export const salesRoutes = (app: Elysia) => {
             query
         }, 'Busca de participação de empresas por valor concluída com sucesso');
 
-        return result.value;
+        return new Response(JSON.stringify(result.value), {
+            headers: { 'Content-Type': 'application/json' }
+        });
     });
 };
