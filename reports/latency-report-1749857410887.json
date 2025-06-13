@@ -1,0 +1,61 @@
+{
+  "timestamp": "2025-06-13T23:30:10.861Z",
+  "environment": "development",
+  "totalTests": 2,
+  "successRate": 100,
+  "avgResponseTime": 622.5,
+  "minResponseTime": 45,
+  "maxResponseTime": 1200,
+  "results": [
+    {
+      "endpoint": "/",
+      "method": "GET",
+      "responseTime": 45,
+      "statusCode": 200,
+      "success": true
+    },
+    {
+      "endpoint": "/produtos",
+      "method": "GET",
+      "responseTime": 1200,
+      "statusCode": 200,
+      "success": true
+    }
+  ],
+  "loadTestResults": [
+    {
+      "endpoint": "/produtos",
+      "method": "GET",
+      "concurrentRequests": 10,
+      "totalRequests": 50,
+      "avgResponseTime": 1150,
+      "minResponseTime": 800,
+      "maxResponseTime": 1800,
+      "successRate": 100,
+      "requestsPerSecond": 8.5
+    }
+  ],
+  "summary": {
+    "healthChecks": {
+      "count": 1,
+      "avgResponseTime": 45,
+      "successRate": 100
+    },
+    "simpleQueries": {
+      "count": 1,
+      "avgResponseTime": 1200,
+      "successRate": 100
+    },
+    "complexQueries": {
+      "count": 0,
+      "avgResponseTime": 0,
+      "successRate": 0
+    },
+    "postOperations": {
+      "count": 0,
+      "avgResponseTime": 0,
+      "successRate": 0
+    }
+  },
+  "thresholdViolations": []
+}
