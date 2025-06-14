@@ -9,18 +9,15 @@ import {
     type MCPMessage
 } from '../services/mcp/mcp.types';
 
-// Instância global do serviço MCP
 const mcpService = new MCPService();
 
 export const mcpRoutes = (app: Elysia) => {
-    // Endpoint principal para comunicação MCP via JSON-RPC
     app.post('/mcp', async ({ body }) => {
         logger.info('Recebida mensagem MCP', { body });
 
         try {
             const message = body as MCPMessage;
 
-            // Validar mensagem MCP
             const validationErrors = validateMCPMessage(message);
             if (validationErrors.length > 0) {
                 return createMCPResponse(message.id, null, {
@@ -30,7 +27,6 @@ export const mcpRoutes = (app: Elysia) => {
                 });
             }
 
-            // Processar método MCP
             const result = await processMCPMethod(message);
             return createMCPResponse(message.id, result);
 
@@ -50,7 +46,6 @@ export const mcpRoutes = (app: Elysia) => {
         })
     });
 
-    // Endpoint para inicialização MCP
     app.get('/mcp/initialize', async () => {
         logger.info('Inicializando servidor MCP');
 
@@ -77,7 +72,6 @@ export const mcpRoutes = (app: Elysia) => {
         };
     });
 
-    // Endpoints REST para facilitar integração
     app.get('/mcp/contexts', async () => {
         logger.info('Listando contextos MCP');
         const result = await tryCatchAsync(() => mcpService.listContexts());
@@ -210,7 +204,6 @@ export const mcpRoutes = (app: Elysia) => {
     });
 };
 
-// Função auxiliar para processar métodos MCP via JSON-RPC
 async function processMCPMethod(message: MCPMessage): Promise<any> {
     const { method, params = {} } = message;
 
