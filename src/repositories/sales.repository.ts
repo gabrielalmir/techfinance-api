@@ -5,9 +5,8 @@ import type { Venda } from "../db/schema";
 export class SalesRepository {
     async getSales(limite: number, offset: number): Promise<Venda[]> {
         try {
-            // Validar e limitar os parâmetros para evitar overflow
-            const limiteSafe = Math.min(Math.max(1, Math.floor(limite)), 1000); // Min: 1, Max: 1000
-            const offsetSafe = Math.max(0, Math.floor(offset)); // Min: 0
+            const limiteSafe = Math.min(Math.max(1, Math.floor(limite)), 1000);
+            const offsetSafe = Math.max(0, Math.floor(offset));
 
             logger.warn(`getSales called with limite: ${limite}, offset: ${offset} -> safe values: ${limiteSafe}, ${offsetSafe}`);
 
@@ -16,7 +15,6 @@ export class SalesRepository {
         } catch (err: any) {
             logger.error('Error in getSales: ' + err.message);
             console.error('Full error details:', err);
-            // Retorna array vazio em caso de erro
             return [];
         }
     }
@@ -128,7 +126,6 @@ export class SalesRepository {
         } catch (err: any) {
             logger.error('Error in getCompanySalesParticipation: ' + err.message);
             console.error('Full error details:', err);
-            // Retorna array vazio em caso de erro em vez de lançar exceção
             return [];
         }
     }
@@ -168,7 +165,6 @@ export class SalesRepository {
         } catch (err: any) {
             logger.error('Error in getCompanySalesParticipationByValue:' + err.message);
             console.error('Full error details:', err);
-            // Retorna array vazio em caso de erro em vez de lançar exceção
             return [];
         }
     }

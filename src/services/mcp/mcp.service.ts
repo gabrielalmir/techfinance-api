@@ -259,12 +259,11 @@ Forneça insights sobre:
     private async generateReport(args: { reportType: string, filters?: any, format?: string }): Promise<any> {
         const { reportType, filters = {}, format = 'json' } = args;
 
-        // Implementação básica de geração de relatório
         const reportData = {
             type: reportType,
             generated_at: new Date().toISOString(),
             filters,
-            data: [], // Seria preenchido com dados reais
+            data: [],
             format
         };
 
@@ -272,7 +271,6 @@ Forneça insights sobre:
     }
 
     private analyzeCashFlow(data: any[]): any {
-        // Análise de fluxo de caixa
         const totalInflow = data.reduce((sum, item) => sum + (item.inflow || 0), 0);
         const totalOutflow = data.reduce((sum, item) => sum + (item.outflow || 0), 0);
         const netFlow = totalInflow - totalOutflow;
@@ -285,8 +283,9 @@ Forneça insights sobre:
             balance_status: netFlow >= 0 ? 'positive' : 'negative',
             recommendations: this.generateCashFlowRecommendations(netFlow)
         };
-    } private analyzeReceivables(data: any[]): any {
-        // Análise de contas a receber
+    }
+
+    private analyzeReceivables(data: any[]): any {
         const totalReceivables = data.reduce((sum, item) => sum + (item.amount || 0), 0);
         const overdueCount = data.filter(item => new Date(item.due_date) < new Date()).length;
         const overdueAmount = data
@@ -307,7 +306,6 @@ Forneça insights sobre:
     }
 
     private analyzeSales(data: any[]): any {
-        // Análise de vendas
         const totalSales = data.reduce((sum, item) => sum + (item.amount || 0), 0);
         const averageSale = totalSales / data.length;
         const salesByMonth = this.groupSalesByMonth(data);

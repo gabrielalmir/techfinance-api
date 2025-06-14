@@ -1,5 +1,3 @@
-// Tipagens para as tabelas do banco
-
 export interface Produto {
     codigo: string;
     descricao_produto: string;

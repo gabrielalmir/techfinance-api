@@ -19,16 +19,13 @@ export class PaymentService {
         const promptMessage = `Data de Hoje = ${new Date().toISOString()}\n\n${prompt}:\n\n${serializedPaymentResult}.\n\n`;
         const response = await this.promptService.generateResponse(promptMessage);
 
-        // Tenta fazer parse do JSON, mas retorna a resposta original se falhar
         try {
             return JSON.parse(response);
         } catch (parseError) {
             console.warn('Falha ao fazer parse do JSON da resposta da IA:', parseError);
-            // Se a resposta já for um objeto, retorna como está
             if (typeof response === 'object') {
                 return response;
             }
-            // Se for string que não conseguiu fazer parse, tenta retornar um objeto estruturado
             return {
                 renegotiated_titles: [],
                 cash_flow_summary: [],
